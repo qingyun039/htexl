@@ -1,0 +1,10 @@
+% layout 'default';
+% title  '查看报告';
+
+<h2>查看报告</h2>
+%= form_for report => begin
+条形码: <%= text_field sampleid => 'HY20181222' %>
+%= select_field reptype => [[html=>'html',selected => 'selected'], 'pdf'] 
+</br></br>
+%= submit_button '查看'
+% end

@@ -1,0 +1,8 @@
+% layout 'default';
+% title  '上传数据';
+
+<h2>上传数据</h2>
+%= form_for upload => (enctype => 'multipart/form-data', method => 'post') => begin
+	%= file_field 'snp_result'
+	%= submit_button '上传'
+% end

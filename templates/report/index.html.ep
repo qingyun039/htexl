@@ -1,0 +1,12 @@
+% layout 'default';
+% title '主页';
+
+<div>
+	%= link_to '上传结果...' => 'upload'
+</div>
+<div>
+	%= link_to '检测列表...' => 'list'
+</div>
+<div>
+	%= link_to '查看报告...' => 'report'
+</div>

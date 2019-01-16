@@ -1,0 +1,22 @@
+% layout 'default';
+% title  '检测列表';
+
+<h2>检测列表</h2>
+<table class="table">
+  <thead>
+    <tr>
+    <td>#</td><td>条形码</td><td>姓名</td><td>检测项目</td><td>送检单位</td><td>查看报告</td>
+    </tr>
+  </thead>
+  <tbody>
+  % for my $item (@$list){
+    <tr>
+      <td><%== join '</td><td>', @$item{'id', '条形码', '姓名', '检测项目', '送检单位'} %></td>
+      <td>
+      <%=  link_to url_for('report')->query(sampleid => $item->{'条形码'}, reptype => 'html')->to_abs => begin %>html<% end %>,
+      <%= link_to url_for('report')->query(sampleid => $item->{'条形码'}, reptype => 'pdf' )->to_abs => begin %>pdf<% end %>
+      </td>
+    </tr>
+  % }
+  </tbody>
+</table>
