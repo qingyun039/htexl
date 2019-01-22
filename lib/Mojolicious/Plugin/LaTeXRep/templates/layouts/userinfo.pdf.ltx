@@ -1,0 +1,16 @@
+% 受检者信息表格
+\newcommand{\hyname}[1]{\renewcommand{\hyname}{#1}}
+\newcommand{\hyage}[1]{\renewcommand{\hyage}{#1}}
+\newcommand{\hysex}[1]{\renewcommand{\hysex}{#1}}
+\newcommand{\hyphone}[1]{\renewcommand{\hyphone}{#1}}
+\newcommand{\hydate}[1]{\renewcommand{\hydate}{#1}}
+\newcommand{\hycode}[1]{\renewcommand{\hycode}{#1}}
+\newcommand{\hyinsti}[1]{\renewcommand{\hyinsti}{#1}}
+
+\hyname{<!= $item->{'姓名'} !>}
+\hyage{<!= sprintf "%d", $item->{'年龄'} !>}
+\hysex{<!= $item->{'性别'} !>}
+\hycode{<!= $item->{'条形码'} !>}
+\hyphone{<!= $item->{'联系方式'} !>}
+\hydate{<!= $item->{'接样日期'} !>}
+\hyinsti{<!= $item->{'送检单位'} !>}

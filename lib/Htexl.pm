@@ -7,6 +7,9 @@ use Mojo::Pg;
 sub startup {
   my $self = shift;
 
+  # 开发测试不用缓存
+  $self->renderer->cache->max_keys(0);
+
   # Load configuration from hash returned by config file
   my $config = $self->plugin('Config');
 

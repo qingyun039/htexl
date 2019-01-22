@@ -53,7 +53,7 @@ sub report{
 	    json => {json => $c->projs->items->first->stash},
 	    html => { template => "$pcode/main" },
 	    pdf  => { template => "$pcode/main" },
-	    txt  => { template => "$pcode/main", format =>'pdf', handler => 'ltx', latex => 1 },
+	    tex  => { template => "$pcode/main", format =>'pdf', handler => 'ltx', latex => 1 },
 	);
 }
 

@@ -2,8 +2,11 @@ package Youskr::Project::SGYY;
 use Mojo::Base 'Youskr::Project';
 
 use Mojo::UserAgent;
+use Storable;
 
-has name =>'高血压安全用药';
+has name => '高血压安全用药';
+
+has repo => sub {Mojo::File->new(__FILE__)->sibling};
 
 sub _have {
 	return +[]
@@ -19,14 +22,13 @@ sub _data {
 	my $url = "http://www.decare.net.cn:81/dingkang/code2/index.php/home/index/report4?type=$type&sample=$sampleid";
 
 	my $rj = Mojo::UserAgent->new->get($url)->result->json;
-	for my $i (@{$rj->{catalog}}){
-		push @{$data->{shopNames}}, $i->{shopName};
-		$data->{slist}{$i->{shopName}} = $i;
-	}
+	
+	$data->{slist} = $rj->{catalog};
 	for my $j (@{$rj->{item_details}}){
 		push @{$data->{component}}, $j->{chemical_name};
 		$data->{clist}{$j->{chemical_name}} = $j;
 	}
+	$data->{cinfo} = retrieve($self->repo->child('zpxy.Pdata'));  # 放在这里觉得不太合理
 
 	return $data;
 }

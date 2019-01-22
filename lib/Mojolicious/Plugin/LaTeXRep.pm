@@ -8,6 +8,13 @@ use LaTeX::Driver;
 
 sub register {
   my ($self, $app) = @_;
+
+
+  # Append "templates" and "public" directories
+  my $base = path(__FILE__)->sibling('LaTeXRep');
+  push @{$app->renderer->paths}, $base->child('templates')->to_string;
+  push @{$app->static->paths},   $base->child('public')->to_string;
+
   
   # add after_render hook
   $app->hook(after_render => sub {
@@ -18,16 +25,11 @@ sub register {
       LaTeX::Driver->new(
       	source => $output,
       	output => $output,
-      	format => 'pdf'
+      	format => 'pdf',
+        texinputs => [$base->child('public'),$base->child('public')->list({dir=>1})->grep(sub{-d})->each],
       )->run;
     }
   });
-
-
-  # Append "templates" and "public" directories
-  my $base = path(__FILE__)->sibling('LaTeXRep');
-  push @{$app->renderer->paths}, $base->child('templates')->to_string;
-  push @{$app->static->paths},   $base->child('public')->to_string;
 
   # Customing template syntax
   $app->plugin('EPRenderer', { 
@@ -42,6 +44,7 @@ sub register {
 }
 
 1;
+
 __END__
 
 =encoding utf8

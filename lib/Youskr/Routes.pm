@@ -23,7 +23,7 @@ has pkey => '检测项目';
 
 has matches => sub { [qr/^rs\d+/, qr/^jtk\d+/] };
 
-has roles => sub { [ '+Default' ]};
+has roles => sub { [ 'Youskr::Routes::Role::Default' ]};
 
 sub route{
     my ($self, $item) = @_;

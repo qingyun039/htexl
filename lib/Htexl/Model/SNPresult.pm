@@ -88,4 +88,17 @@ sub fetchItem {
     return +{ %$item, @$snps };
 }
 
+sub getItem {
+    my ($self, $id) = @_;
+
+    my $item = $self->pg->db->select(
+        $self->item_tbl, '*', {id => $id}
+    )->hash;
+    my $snps = $self->pg->db->select(
+        $self->snp_tbl, ['位点', '碱基'],{'样本' => $item->{id}}
+    )->arrays->flatten->to_array;
+
+    return +{ %$item, @$snps };
+}
+
 1;

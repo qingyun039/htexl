@@ -53,8 +53,9 @@ sub validate{   # 在子类中实现吧
 
 sub stash {
     my $self = shift;
+  
     return +{
-        item => {%$self},
+        item => {map {($_, $self->{$_})} grep { ! $self->can($_)} keys %$self},
         result => $self->_data,
     };
 }

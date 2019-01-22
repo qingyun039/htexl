@@ -1,3 +1,5 @@
 % layout 'default';
 
+<img src="/test.png" >
+
 %= dumper stash

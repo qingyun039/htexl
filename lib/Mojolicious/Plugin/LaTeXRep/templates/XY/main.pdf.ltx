@@ -1,8 +1,191 @@
 % 中平基因高血压用药模板
-\documentclass{ctexbook}
+\documentclass[10pt]{ctexbook}
 \usepackage{geometry}
 \usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{calc}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{longtable}
+\usepackage{pdfpages}
+\usepackage[absolute,overlay]{textpos}
 
+\geometry{paperwidth=8.27in,paperheight=11.22in, margin=25mm, includehead, includefoot}
+\fancyhf{}
+\fancyhead[OL]{\color{black!60}\sffamily SCIENCE ENLIGHTEN LIFE}
+\fancyhead[ER]{\color{black!60}\sffamily 中\ 平\ 基\ 因\ ---\ 高\ 血\ 压\ 基\ 因\ 检\ 测}
+\fancyfoot[OL,RE]{\color{black!60}\sffamily 【\quad\thepage\quad{}】}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\pagestyle{fancy}
+
+\setCJKsansfont{Source Han Sans CN Medium}[BoldFont=Source Han Sans CN Bold]
+\setsansfont{Source Han Sans CN Medium}[BoldFont=Source Han Sans CN Bold]
+
+\setlength{\TPHorizModule}{1mm}
+\setlength{\TPVertModule}{1mm}
+
+\newcommand{\myrule}[1]{
+	\makebox[0pt][l]{\raisebox{-6pt}{\rule{6em}{1.2pt}}}\makebox[6em]{#1}%
+}
+\newcommand{\infopage}{
+	\begin{textblock}{178}(17.5, 180)
+		\LARGE\sffamily\centering\noindent
+			姓\qquad{}名:\myrule{\hyname}\quad{}性\qquad{}别:\myrule{\hysex} \\[1.2em]
+			\ 年\qquad{}龄:\myrule{\hyage}\quad{}样本编号:\myrule{\hycode}
+	\end{textblock}
+}
+
+\newcommand{\mtoc}{
+	\parindent=0pt
+	\large\color{black!80!white}
+	\begin{textblock}{65}(26,108)
+		项目介绍\hfill\pageref{Lb0}
+		
+		\vspace{4em}
+		检测结果\hfill\pageref{Lb1}
+		
+		\vspace{4em}
+		血管紧张素转换酶抑制剂\hfill\pageref{Lb2}
+		
+		\vspace{4em}
+		利尿剂\hfill\pageref{Lb3}
+		
+		\vspace{4em}
+		β-受体阻滞剂\hfill\pageref{Lb4}
+		
+		\vspace{4em}
+		钙离子拮抗剂\hfill\pageref{Lb5}
+	\end{textblock}
+	\begin{textblock}{65}(118,108)
+		血管紧张素II受体拮抗剂\hfill\pageref{Lb6}
+
+		\vspace{4em}
+		用药安全\hfill\pageref{Lb7}
+		
+		\vspace{4em}
+		综合建议\hfill\pageref{Lb8}
+	\end{textblock}
+}
+
+\definecolor{Main}{RGB}{87,74,168}
+\definecolor{Sub}{RGB}{198,193,195}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newlength{\tlen}%
+\newlength{\mlen}%
+\newcommand{\dsec}[2]{
+	\vspace*{25mm}
+	\noindent
+	{\sffamily\huge\bfseries #1 \\[.5em]
+	 \bfseries\large\color{Sub}%
+	 \settowidth{\mlen}{#2}%
+	 \makebox[0pt][l]{\textcolor{Main}{\rule[-.1em]{\mlen}{.5em}}}#2}
+}
+
+\newenvironment{altDescription}{\begin{list}{}{%
+	\settowidth\labelwidth{\altDescriptionlabel{要四个字}}%
+	\setlength\leftmargin{\labelwidth+\labelsep}
+	\let\makelabel\altDescriptionlabel%
+}}{\end{list}}
+\newcommand*\altDescriptionlabel[1]{%
+	\hfil\bfseries\color{Main} #1：%
+}
+
+! my $ad_crock = begin
+!		my $ad = shift;
+!		if($ad eq '正常用药'){
+			{\large\textbf{正常服用}}\\此药物在您体内效果好 , 毒副作用低或代谢正常 , 可按照药物说明或医生推荐剂量服用
+!		}elsif($ad =~ /不良反应风险增加/){
+			{\large\textbf{不良反应风险增加 , 谨遵医嘱}}\\表示根据基因检测位点 , 此药物在您体内不良反应风险增加 , 建议谨遵医嘱服用 , 以避免药物不良反应对您造成损伤
+!		}else{
+			{\large\textbf{效果差 , 谨遵医嘱}}\\此药物在您体内治疗效果差 , 建议谨遵医嘱服用 , 以避免药物不良反应对您造成损伤
+!       }
+! end	
+
+!= include 'layouts/userinfo';
 \begin{document}
+! my $tpl = 'zpxy.pdf'; my $label=0;
+	\sffamily\color{black!80!white}
+	\includepdf[pages=1]{<!= $tpl !>}
+	\includepdf[pages=2,pagecommand={\thispagestyle{empty}\infopage}]{<!= $tpl !>}
+	\includepdf[pages={3-4}]{<!= $tpl !>}
+	\includepdf[pages=5,pagecommand={\thispagestyle{empty}\mtoc}]{<!= $tpl !>}
+	\setcounter{page}{1}
+	\includepdf[pages=6,pagecommand={\label{Lb<!= $label++ !>}}]{<!= $tpl !>}
+	\dsec{高血压基因检测结果}{CHILD SAFETY MEDICATION GENE TEST}\label{Lb<!= $label++ !>}
+	\begin{center}
+	\arrayrulewidth=1pt
+	\arrayrulecolor{Main!70!white}
+	\setlength{\tlen}{\textwidth-6\tabcolsep}
+! my $class = '';
+! for my $drug (@{$result->{slist}}){
+!   if($drug->{type_name} ne $class){
+!      if($class ne ''){
+	\end{longtable}
 
+	\addvspace{2cm}	
+!      }
+!      $class = $drug->{type_name};
+	\noindent
+	\begin{longtable}{|p{.48\tlen}|P{.26\tlen}|P{.26\tlen}|}
+		\hline
+		\rowcolor{Main}
+		\multicolumn{3}{|c|}{\color{white}\Large \rule{0pt}{18pt}<!= $class !>} \\\hline
+		\multicolumn{1}{|c|}{\color{black!90}药物中文名} & \multicolumn{1}{c|}{\color{black!90}成分} & \multicolumn{1}{c|}{\color{black!90}用药指导} \\\hline	
+		\endhead
+!   }
+	    	<!= $drug->{shopName} !> & <!= $drug->{chemica_name} !> & <!= $drug->{guide} !> \\\hline
+
+! }
+	\end{longtable}
+	\end{center}
+! $class = '';my $page = 7;
+! foreach my $c (@{$result->{component}}){
+!	if(exists $result->{cinfo}{$c}){
+!       my $cinfo = $result->{cinfo}{$c};
+!       my $crt   = $result->{clist}{$c};
+!       if($class ne $crt->{type_name}){
+	\includepdf[pages=<!= $page !>,pagecommand={\label{Lb<!= $label++ !>}}]{<!= $tpl !>}
+!           $class = $crt->{type_name}; $page++;
+!       }
+	\newpage
+	\dsec{<!= $c !>}{<!= $cinfo->[0] !>} 
+
+	\vspace{15mm}
+	\begin{center}
+		\begin{minipage}[t]{21em}
+			\begin{altDescription}
+				\item[商品名称] <!= $crt->{goods_name} !>
+				\item[<!= $c !>] <!= $crt->{type_name} !>
+				\item[药物知识] <!= $cinfo->[1] !>
+				\item[用药建议] <!= $ad_crock->($crt->{rsInfo}[0]{guide}) !>
+			\end{altDescription}
+			\vspace{5pt}
+!     foreach my $rs (@{$crt->{rsInfo}}){			
+			\begin{center}
+				\begin{minipage}{.3\textwidth}
+					\includegraphics[width=\textwidth]{icon}
+				\end{minipage}
+				\hfill
+				\begin{minipage}{.6\textwidth}
+					\makebox[4em][s]{基因名}: <!= $rs->{gene} !>\\[5pt]
+					\makebox[4em][s]{基因位点}: <!= $rs->{rs} !>\\[5pt]
+					\makebox[4em][s]{基因型}: <!= $rs->{type} !>
+				\end{minipage}
+			\end{center}
+!       }
+		\end{minipage}
+		\hspace*{4em}
+		\begin{minipage}[t]{\textwidth-21em-5em}
+			\rule{0pt}{1em}\\[-1em]\includegraphics[width=\textwidth]{<!= $cinfo->[2] !>}
+		\end{minipage}
+	\end{center}
+!   }	
+! }
+\includepdf[pages=12,pagecommand={\label{Lb<!= $label++ !>}}]{<!= $tpl !>}
+\includepdf[pages={13-18},pagecommand={}]{<!= $tpl !>}
+\includepdf[pages=19,pagecommand={\label{Lb<!= $label++ !>}}]{<!= $tpl !>}
+\includepdf[pages={20-23},pagecommand={}]{<!= $tpl !>}
+\includepdf[pages=24]{<!= $tpl !>}
 \end{document}
