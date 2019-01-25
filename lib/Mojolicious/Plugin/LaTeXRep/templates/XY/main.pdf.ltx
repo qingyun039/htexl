@@ -10,6 +10,7 @@
 \usepackage{longtable}
 \usepackage{pdfpages}
 \usepackage[absolute,overlay]{textpos}
+%\usepackage{background}
 
 \geometry{paperwidth=8.27in,paperheight=11.22in, margin=25mm, includehead, includefoot}
 \fancyhf{}
@@ -71,11 +72,11 @@
 
 \definecolor{Main}{RGB}{87,74,168}
 \definecolor{Sub}{RGB}{198,193,195}
-\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}m{#1}}
 \newlength{\tlen}%
 \newlength{\mlen}%
 \newcommand{\dsec}[2]{
-	\vspace*{25mm}
+	\vspace*{25mm plus 0mm minus 20mm}
 	\noindent
 	{\sffamily\huge\bfseries #1 \\[.5em]
 	 \bfseries\large\color{Sub}%
@@ -102,18 +103,30 @@
 			{\large\textbf{效果差 , 谨遵医嘱}}\\此药物在您体内治疗效果差 , 建议谨遵医嘱服用 , 以避免药物不良反应对您造成损伤
 !       }
 ! end	
+! my $gu_crock = begin
+!		my $ad = shift;
+!		if($ad eq '正常用药'){
+			正常服用
+!		}elsif($ad =~ /不良反应风险增加/){
+			不良反应风险增加, 谨遵医嘱
+!		}else{
+			效果差, 谨遵医嘱
+!       }
+! end	
 
 != include 'layouts/userinfo';
 \begin{document}
 ! my $tpl = 'zpxy.pdf'; my $label=0;
-	\sffamily\color{black!80!white}
+	\sffamily\color{black!80!white}\fboxrule=0pt
 	\includepdf[pages=1]{<!= $tpl !>}
-	\includepdf[pages=2,pagecommand={\thispagestyle{empty}\infopage}]{<!= $tpl !>}
+	\includepdf[pages=<!= $item->{'性别'} eq '男' ? 2 : 25 !>,pagecommand={\thispagestyle{empty}\infopage}]{<!= $tpl !>}
 	\includepdf[pages={3-4}]{<!= $tpl !>}
 	\includepdf[pages=5,pagecommand={\thispagestyle{empty}\mtoc}]{<!= $tpl !>}
 	\setcounter{page}{1}
 	\includepdf[pages=6,pagecommand={\label{Lb<!= $label++ !>}}]{<!= $tpl !>}
 	\dsec{高血压基因检测结果}{CHILD SAFETY MEDICATION GENE TEST}\label{Lb<!= $label++ !>}
+
+	\vspace{15mm}
 	\begin{center}
 	\arrayrulewidth=1pt
 	\arrayrulecolor{Main!70!white}
@@ -128,14 +141,14 @@
 !      }
 !      $class = $drug->{type_name};
 	\noindent
-	\begin{longtable}{|p{.48\tlen}|P{.26\tlen}|P{.26\tlen}|}
+	\begin{longtable}{|m{.48\tlen}|P{.26\tlen}|P{.26\tlen}|}
 		\hline
 		\rowcolor{Main}
 		\multicolumn{3}{|c|}{\color{white}\Large \rule{0pt}{18pt}<!= $class !>} \\\hline
 		\multicolumn{1}{|c|}{\color{black!90}药物中文名} & \multicolumn{1}{c|}{\color{black!90}成分} & \multicolumn{1}{c|}{\color{black!90}用药指导} \\\hline	
 		\endhead
 !   }
-	    	<!= $drug->{shopName} !> & <!= $drug->{chemica_name} !> & <!= $drug->{guide} !> \\\hline
+	    	<!= $drug->{shopName} !> & <!= $drug->{chemica_name} !> & <!= $gu_crock->($drug->{guide}) !> \\\hline
 
 ! }
 	\end{longtable}
@@ -152,7 +165,7 @@
 	\newpage
 	\dsec{<!= $c !>}{<!= $cinfo->[0] !>} 
 
-	\vspace{15mm}
+	\vspace{15mm plus 0mm minus 10mm}
 	\begin{center}
 		\begin{minipage}[t]{21em}
 			\begin{altDescription}
@@ -162,18 +175,19 @@
 				\item[用药建议] <!= $ad_crock->($crt->{rsInfo}[0]{guide}) !>
 			\end{altDescription}
 			\vspace{5pt}
-!     foreach my $rs (@{$crt->{rsInfo}}){			
-			\begin{center}
-				\begin{minipage}{.3\textwidth}
+!       foreach my $rs (@{$crt->{rsInfo}}[0,1]){
+!           last unless $rs;			
+			\begin{flushleft}
+				\begin{minipage}{6em}
 					\includegraphics[width=\textwidth]{icon}
 				\end{minipage}
-				\hfill
-				\begin{minipage}{.6\textwidth}
+				\hspace{2em}
+				\begin{minipage}{12em}
 					\makebox[4em][s]{基因名}: <!= $rs->{gene} !>\\[5pt]
 					\makebox[4em][s]{基因位点}: <!= $rs->{rs} !>\\[5pt]
 					\makebox[4em][s]{基因型}: <!= $rs->{type} !>
 				\end{minipage}
-			\end{center}
+			\end{flushleft}
 !       }
 		\end{minipage}
 		\hspace*{4em}
@@ -181,6 +195,19 @@
 			\rule{0pt}{1em}\\[-1em]\includegraphics[width=\textwidth]{<!= $cinfo->[2] !>}
 		\end{minipage}
 	\end{center}
+!       foreach my $rs (@{$crt->{rsInfo}}[2..$#{$crt->{rsInfo}}]){ 
+!           last unless $rs;	
+	\fbox{
+		\begin{minipage}{6em}
+			\includegraphics[width=\textwidth]{icon}
+		\end{minipage}
+		\hspace{2em}
+		\begin{minipage}{12em}
+			\makebox[4em][s]{基因名}: <!= $rs->{gene} !>\\[5pt]
+			\makebox[4em][s]{基因位点}: <!= $rs->{rs} !>\\[5pt]
+			\makebox[4em][s]{基因型}: <!= $rs->{type} !>
+		\end{minipage}}\hfil
+!       }
 !   }	
 ! }
 \includepdf[pages=12,pagecommand={\label{Lb<!= $label++ !>}}]{<!= $tpl !>}

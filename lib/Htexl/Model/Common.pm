@@ -1,6 +1,7 @@
 package Htexl::Model::Common;
 use Mojo::Base -strict;
 
+use List::Util qw/reduce/;
 use List::MoreUtils qw/pairwise/;
 use Spreadsheet::Read qw/ReadData rows/;
 use Mojo::Collection qw/c/;
@@ -10,7 +11,8 @@ use Exporter 'import';
 
 our @EXPORT_OK = qw/
 	currentDate normalizeDate
-	sheet2collection
+	sheet2collection calcRisk
+    multiRisk
 /;
 
 
@@ -53,5 +55,20 @@ sub sheet2collection{
 
     return wantarray ? (@rc) : shift @rc;
 }
+
+# 突变频率，or值
+sub calcRisk {
+    my ($Bf, $or) = @_; 
+    return () unless($Bf and $or);
+    my $Af = 1 - $Bf;
+    my $avg_risk = $Af*$Af + 2*$Af*$Bf*$or + $Bf*$Bf*$or*$or;
+    return ($avg_risk, (1/$avg_risk), ($or/$avg_risk), $or*$or/$avg_risk);
+}
+
+# 多位点风险综合值
+sub multiRisk{
+    return reduce { $a * $b } @_;
+}
+
 
 1;

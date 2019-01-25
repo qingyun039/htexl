@@ -19,6 +19,7 @@ sub startup {
   # 
   $self->helper(pg => sub { state $pg = Mojo::Pg->new($config->{pgsql}) } );
 
+
   # Configure the application
   $self->secrets($config->{secrets});
 

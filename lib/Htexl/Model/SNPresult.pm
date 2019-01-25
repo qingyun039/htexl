@@ -20,7 +20,7 @@ sub xlstoDB {
 	my ($coll) = sheet2collection($xls);
 
 	unless($coll->first->{'接样日期'}){
-		my $recei_date = (split /[_\-]+/, $xls)[-3];  # 接样日期在文件名中
+		my $recei_date = (split /[_\-]+/, $xls)[1];  # 接样日期在文件名中
       
 		$recei_date = $recei_date =~ /\d+/ ? normalizeDate($recei_date) : currentDate();
 		$coll->map(sub{         # 为xls表中的每项添加接样时间

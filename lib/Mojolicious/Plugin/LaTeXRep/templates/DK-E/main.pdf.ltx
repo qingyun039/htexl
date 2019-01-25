@@ -1,0 +1,120 @@
+% 三高易感基因检测报告模板
+\documentclass[10pt]{ctexbook}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{calc}
+\usepackage{xcolor}
+\usepackage{pdfpages}
+\usepackage[absolute,overlay]{textpos}
+\usepackage{tikz}
+
+\geometry{paperwidth=8.27in,paperheight=11.22in, margin=25mm, includehead, includefoot}
+
+\setCJKsansfont{Source Han Sans CN Medium}[BoldFont=Source Han Sans CN Bold]
+\setsansfont{Source Han Sans CN Medium}[BoldFont=Source Han Sans CN Bold]
+
+\setlength{\TPHorizModule}{1mm}
+\setlength{\TPVertModule}{1mm}
+
+\newcommand{\myrule}[1]{
+	\makebox[0pt][l]{\raisebox{-6pt}{\rule{6em}{1.2pt}}}\makebox[6em]{#1}%
+}
+\newcommand{\infopage}{
+	\begin{textblock}{178}(17.5, 180)
+		\LARGE\sffamily\centering\noindent
+			姓\qquad{}名:\myrule{\hyname}\quad{}性\qquad{}别:\myrule{\hysex} \\[1.2em]
+			\ 年\qquad{}龄:\myrule{\hyage}\quad{}样本编号:\myrule{\hycode}
+	\end{textblock}
+}
+
+
+% \ddash{高血压病}{HYPERTENSION}{125}{中风险}{mid}
+<! 
+	our %zh_en = (
+		'高血压' => 'HYPERTENSION',
+		'高血脂' => 'HYPERLIPIDEMIA',
+		'II型糖尿病' => 'DIABETES MELLITUS TYPE 2',
+		'高胆固醇血症' =>  'HYPERLIPIDEMIA',
+	);
+
+	$result->{dlist}{'高胆固醇血症'} = $result->{dlist}{'高血脂'};
+
+	sub ddash{
+		my ($dis, $risk) = @_;
+		my $angle = 225-(($risk-0.08)/0.008);
+		my ($level, $col) = (levelRisk($risk), colRisk($risk));
+		return "{$dis}{$zh_en{$dis}}{$angle}{$level}{$col}";
+	}
+
+	sub levelRisk{
+		my $risk = shift;
+		return $risk < 0.8 ? '低风险' : $risk < 1.2 ? '中风险' : '高风险';
+	}
+
+	sub colRisk{
+		my $risk = shift;
+		return $risk < 0.8 ? 'low' : $risk < 1.2 ? 'mid' : 'high';
+	}
+
+!>
+\definecolor{low}{RGB}{96,195,50}
+\definecolor{mid}{RGB}{215,163,21}
+\definecolor{high}{RGB}{183,29,35}
+\newcommand{\ddash}[5]{
+	\begin{tikzpicture}
+		\draw[line width=.8pt] (225:16mm) arc[start angle=225, end angle=90, radius=16mm] (90:16mm) arc[start angle=90, end angle=-45, radius=16mm] (-45:16mm);
+		\fill[red] (#3:16mm) circle (3pt);
+		\node[align=center] (t) at (0,0) {%
+			{\color{black!70}\sffamily\tiny #2}\\[-1pt]
+			{\color{black!70}\sffamily\bfseries\Large #1}
+		}; 
+		\node[rounded corners=.5\baselineskip,fill=#5,inner xsep=1em] (p) at (-90:12mm) {\color{white}\sffamily\bfseries #4};
+		\draw[line width=3pt,color=low] (225:21mm) -- (225:20mm) arc[start angle=225, end angle=137, radius=20mm] -- (137:21mm);
+		\node[anchor=south east,font=\color{low}\sffamily\bfseries\small] at (135:29mm) {低风险};
+		\draw[line width=3pt,color=mid] (133:21mm) -- (133:20mm) arc[start angle=133, end angle=77, radius=20mm] -- (77:21mm);
+		\node[anchor=south,font=\color{mid}\sffamily\bfseries\small] at (75:29mm) {中风险};
+		\draw[line width=3pt,color=high] (73:21mm) -- (73:20mm) arc[start angle=73, end angle=15, radius=20mm] -- (15:21mm);
+		\node[anchor=west,font=\color{high}\sffamily\bfseries\small] at (15:29mm) {高风险};
+		\foreach \an in {-45, -40,...,225} {
+			\draw[line width=1pt,color=black!50] (\an:26mm) -- (\an:24mm);
+		};
+		\foreach \an in {15,75,...,225} {
+			\draw[line width=1pt, color=black!50] (\an:28mm) -- (\an:26mm);
+		};
+	\end{tikzpicture}
+}
+\newcommand{\alldash}{%
+	\begin{textblock}{160}(30,90)
+		\begin{center}
+			\ddash<!= ddash('II型糖尿病', $result->{dlist}{'II型糖尿病'}[0]) !> 
+
+			\vspace{15mm}
+			\ddash<!= ddash('高血压', $result->{dlist}{'高血压'}[0]) !> \hfill \ddash<!= ddash('高胆固醇血症', $result->{dlist}{'高胆固醇血症'}[0]) !> 
+		\end{center}
+	\end{textblock}
+}
+
+\newcommand{\ttitle}[3][35,85]{%
+	\begin{textblock}{100}(#1)
+		\noindent\Large
+		\tikz \node[anchor=west,rounded corners=.5\baselineskip,fill=#3,inner xsep=.8em, inner ysep=1ex,font=\color{white}\sffamily\bfseries] at (0,0){检测结果：#2};
+	\end{textblock}
+}
+
+! my $tpl = 'sgyg'; my $risk = 0.8;
+!= include 'layouts/userinfo';
+\begin{document}
+	\includepdf[pages=1]{<!= $tpl !>}
+	\includepdf[pages=<!= $item->{'性别'} eq '男' ? 2 : 48 !>,pagecommand={\thispagestyle{empty}\infopage}]{<!= $tpl !>}
+	\includepdf[pages={3-6}]{<!= $tpl !>}
+	\includepdf[pages=7, pagecommand={\thispagestyle{empty}\alldash}]{<!= $tpl !>}
+	\includepdf[pages=8]{<!= $tpl !>} <! $risk = $result->{dlist}{'II型糖尿病'}[0]; !>
+	\includepdf[pages=9, pagecommand={\thispagestyle{empty}\ttitle[31,87]{<!= levelRisk($risk) !>}{<!= colRisk($risk)!>}}]{<!= $tpl !>}
+	\includepdf[pages={10-13}]{<!= $tpl !>} <! $risk = $result->{dlist}{'高血压'}[0]; !>
+	\includepdf[pages=14, pagecommand={\thispagestyle{empty}\ttitle[31,87]{<!= levelRisk($risk) !>}{<!= colRisk($risk)!>}}]{<!= $tpl !>}
+	\includepdf[pages={15-18}]{<!= $tpl !>} <! $risk = $result->{dlist}{'高血脂'}[0]; !>
+	\includepdf[pages=19, pagecommand={\thispagestyle{empty}\ttitle[31,94.5]{<!= levelRisk($risk) !>}{<!= colRisk($risk)!>}}]{<!= $tpl !>}
+	\includepdf[pages={20-47}]{<!= $tpl !>}
+\end{document}

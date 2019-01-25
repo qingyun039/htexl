@@ -10,6 +10,7 @@ has pcodes => sub {
 
 sub findc {
 	my ($self, $old_pcode) = @_;
+	return 'SGYG' if $old_pcode eq 'DK-E';
 	return $old_pcode if $old_pcode ~~ any(@{$self->pcodes});
 	return 'SGYY' if $old_pcode ~~ any(qw/XY XT XZ/);
 	return undef;

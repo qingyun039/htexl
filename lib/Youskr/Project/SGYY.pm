@@ -9,7 +9,7 @@ has name => '高血压安全用药';
 has repo => sub {Mojo::File->new(__FILE__)->sibling};
 
 sub _have {
-	return +[]
+	return +[];
 }
 
 sub _data {
