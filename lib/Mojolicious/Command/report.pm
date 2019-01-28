@@ -19,6 +19,8 @@ has db => sub { Htexl::Model::SNPresult->new(pg => shift->app->pg) };
 sub run{
 	my ($self, @args) = @_;
 
+	$self->app->mode('production');
+
 	getopt \@args,
 	    'x|xls=s' => \my $xls,
 	    't|tex'   => \my $tex, 
@@ -26,7 +28,7 @@ sub run{
 	    'a|arid=s' => \my @arid, 
 	    'p|psql'       => \my $psql,
 	    'l|list=i'       => \my $list,
-	    'o|out'       => \my $out,
+	    'o|outdir=s'       => \my $outdir,
 	    'd|debug' => \my $debug;
 
 	if($list){
@@ -57,12 +59,17 @@ sub run{
 		if($json){
 			$output = encode_json($_->stash);
 		}else{
-			my $c = $self->app->build_controller->stash(%{$_->stash});
+			my $c = $self->app->build_controller->stash(%{$_->stash});	
 			# 这里为什么要encode????
-			$output = $c->render_to_string(template => $_->{'检测项目'}."/main" )->encode('utf8')->to_string;
+			$output = $c->render_to_string(template => $self->app->tpl($_->{'检测项目'})."/main" )->encode('utf8')->to_string;
+			return $output unless($outdir);
+			my $mf = Mojo::File->new($outdir);
+			
 			unless($tex){
 				$self->app->plugins->emit_hook(after_render => $c, \$output, $format);
+				return $mf->child($_->{'条形码'}.$_->{'检测项目'}.'.pdf')->spurt($output)->to_abs;
 			}
+			return $mf->child($_->{'条形码'}.$_->{'检测项目'}.'.tex')->spurt($output)->to_abs;
 		}
 		return $output;
 	})->each(sub{print});

@@ -41,9 +41,17 @@ sub register {
 			    },
 		});
     
+  # helper
+  $app->helper(tpl => \&_pcode2tpl);
+}
+
+sub _pcode2tpl{
+  my ($c, $pcode) = @_;
+  return $pcode;
 }
 
 1;
+
 
 __END__
 
