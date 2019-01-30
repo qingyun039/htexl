@@ -42,18 +42,21 @@ sub list {
 sub report{
 	my $c = shift;
 
-	my $pcode = $c->stash('pcode');
-	my $sampleid = $c->stash('sampleid');
-
+	my $pcode = $c->param('pcode');
+	my $sampleid = $c->param('sampleid');
 	my $item = $c->model->fetchItem($pcode, $sampleid);
 	$c->projs->add_item($item);
-	$c->stash(%{$c->projs->items->first->stash});
+	$c->stash(%{$c->projs->items->first->stash})->style;
 	
+	my $sdata = {};
+	@{$sdata}{qw/item result style/} = @{$c->stash}{qw/item result style/};
+
+	my $template = $c->stash('style')->{template};
 	$c->respond_to(
-	    json => {json => $c->projs->items->first->stash},
-	    html => { template => "$pcode/main" },
-	    pdf  => { template => "$pcode/main" },
-	    tex  => { template => "$pcode/main", format =>'pdf', handler => 'ltx', latex => 1 },
+	    json => { json => $sdata },
+	    html => { template => "$template/main" },
+	    pdf  => { template => "$template/main" },
+	    tex  => { template => "$template/main", format =>'pdf', handler => 'ltx', latex => 1 },
 	);
 }
 

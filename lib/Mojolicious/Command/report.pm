@@ -26,9 +26,10 @@ sub run{
 	    't|tex'   => \my $tex, 
 	    'j|json'  => \my $json,
 	    'a|arid=s' => \my @arid, 
-	    'p|psql'       => \my $psql,
-	    'l|list=i'       => \my $list,
-	    'o|outdir=s'       => \my $outdir,
+	    'p|psql'   => \my $psql,
+	    'l|list=i' => \my $list,
+	    'q|query=s'  => \my $query,
+	    'o|outdir=s' => \my $outdir,
 	    'd|debug' => \my $debug;
 
 	if($list){
@@ -59,9 +60,10 @@ sub run{
 		if($json){
 			$output = encode_json($_->stash);
 		}else{
-			my $c = $self->app->build_controller->stash(%{$_->stash});	
+			my $c = $self->app->build_controller->stash(%{$_->stash})->style($query);
+			
 			# 这里为什么要encode????
-			$output = $c->render_to_string(template => $self->app->tpl($_->{'检测项目'})."/main" )->encode('utf8')->to_string;
+			$output = $c->render_to_string(template => $c->stash->{style}{template}."/main" )->encode('utf8')->to_string;
 			return $output unless($outdir);
 			my $mf = Mojo::File->new($outdir);
 			
@@ -90,6 +92,7 @@ sub run{
      -j, --json               输出为json格式
      -a, --arid <string>      指定数据id，生成该数据的报告
      -l, --list <number>      列出数据库中前n条检测结果
+     -q, --query <string>     指定模板的一些参数
      -o, --output <string>    输出文件名
      -d, --debug              开启调试
 

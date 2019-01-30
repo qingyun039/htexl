@@ -42,12 +42,22 @@ sub register {
 		});
     
   # helper
-  $app->helper(tpl => \&_pcode2tpl);
+  $app->helper(style => \&_style);
 }
 
-sub _pcode2tpl{
-  my ($c, $pcode) = @_;
-  return $pcode;
+sub _style{
+  my ($c,$query) = (shift, shift);
+  my $style = {};
+
+  if($query){
+    $c->req->url->query($query);
+  }
+  # 寻找模板
+  $style->{template} = $c->stash->{item}{'检测项目'};
+  # 其它与模板相关的参数
+  $style = { %$style, %{$c->req->params->to_hash} };
+  $c->stash(style => $style);
+  return $c;
 }
 
 1;
