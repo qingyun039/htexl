@@ -69,9 +69,9 @@ sub run{
 			
 			unless($tex){
 				$self->app->plugins->emit_hook(after_render => $c, \$output, $format);
-				return $mf->child($_->{'条形码'}.$_->{'检测项目'}.'.pdf')->spurt($output)->to_abs;
+				return $mf->child($_->{'姓名'}.$_->{'条形码'}.$_->{'检测项目'}.'.pdf')->spurt($output)->to_abs;
 			}
-			return $mf->child($_->{'条形码'}.$_->{'检测项目'}.'.tex')->spurt($output)->to_abs;
+			return $mf->child($_->{'姓名'}.$_->{'条形码'}.$_->{'检测项目'}.'.tex')->spurt($output)->to_abs;
 		}
 		return $output;
 	})->each(sub{print});
