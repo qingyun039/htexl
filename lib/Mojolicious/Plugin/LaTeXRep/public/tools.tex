@@ -1,0 +1,76 @@
+% 拦腰截取pdf页面的一部分
+\newcommand{\includepdfpart}[4]{% 参数为： 页面，上距，下距，pdf文件名
+	\par\noindent
+	\makebox[\textwidth]{\includegraphics[page=#1,trim=0 #3 0 #2,clip]{#4}}
+	\par
+}
+
+% 画雷达图
+%\usepackage{tikz}
+%\usetikzlibrary{calc}
+
+\pgfkeys{
+	/rada/.is family, /rada,
+	default/.style = {    % 默认参数
+		max=100, min=40, level=7, radius=5.5, color=blue
+	},
+	max/.estore in = \max,        % 传递的参数保存于此宏中
+	min/.estore in = \min,
+	level/.estore in = \level,
+	radius/.estore in = \radius,
+	color/.estore in = \mainclr,
+}
+\newcommand{\rada}[3][]{
+	\pgfkeys{/rada, default, #1}
+	\def\alist{#2}   % 可能合并成一个参数更好，较不易出错
+	\def\blist{#3}
+	\pgfmathsetmacro{\step}{(\max-\min)/(\level-1)}   % 计算结果保存于此宏中
+	\pgfmathsetmacro{\nextv}{\min+\step}
+	\pgfmathsetmacro{\leveln}{0.25+0.75/(\level-1)}
+	\begin{tikzpicture}[every node/.style={font=\sffamily\color{gray}}]
+	% 得到项数
+	\foreach \x[count=\xi] in \alist {\global\let\maxitems\xi}
+	
+	% 可能用 let 比较好，
+	% let 和 def 的区别(摘自TeX book的习题和答案)：
+	% EXERCISE 20.8: Is there a significant difference between '\let\a=\b' and '\def\a{\b}' ?
+	%
+	% ANSWER: Yes indeed. In the first case, \a receives the meaning of \b that is current at the time of the \let. 
+	% In the second case, \a becomes a macro that will expand into the token \b whenever \a is used, 
+	% so it has the meaning of \b that is current at the time of use. You need \let, if you want to inter-
+	% change the meanings of \a and \b. 
+	\global\def\ang{360/\maxitems}
+	\global\def\startang{270+\ang/2}
+	
+	% 每项位置
+	\foreach[count=\ii] \s[evaluate=\s as \x using (\startang+\ii*\ang)] in \alist{
+		\coordinate (c\ii) at (\x:\radius);
+		\node[label=\x:\s] at (c\ii) {};
+	}
+
+	% 画网
+	\coordinate (v) at (0:0);
+	\foreach[count=\ii] \f in {0.25,\leveln,...,1}{
+		\draw[color=\mainclr] ($(v)!\f!(c1)$) foreach \i in {2,3,...,\maxitems} { -- ($(v)!\f!(c\i)$) } -- cycle;
+		\coordinate (h\ii) at ($(v)!\f!(c\maxitems)$);
+	}
+	
+	% 刻度
+	\foreach[count=\i] \j in {\min,\nextv,...,\max}{
+		\pgfmathreal{\j}
+		\node[above] at (h\i -| v) {\pgfmathresult};
+	}
+
+	% 阴影部分
+	\foreach[count=\ii] \st[evaluate=\st as \s using (0.75*(\st-\min)/(\max-\min)+0.25)] in \blist {
+		\coordinate (s\ii) at ($(v)!\s!(c\ii)$);
+		\fill[fill=\mainclr!70!gray] (s\ii) circle (3pt);
+		\node[circle,sloped] at ($(s\ii)!12pt!(c\ii)$) {\st};
+	}
+	\foreach[count=\b] \a in {2,3,...,\maxitems,1}{ \coordinate (tmp\b) at ($(s\b)!.5!(s\a)$); }
+	\foreach \i in {1,2,...,\maxitems}{
+		\coordinate (d\i) at ($(tmp\i)!.5cm!-90:(s\i)$); 
+	}
+	\fill[fill=\mainclr!70, opacity=.7] (s1) foreach[count=\j] \i in {2,3,...,\maxitems}{ ..controls(d\j).. (s\i) } .. controls(d\maxitems) .. cycle;	
+	\end{tikzpicture}
+}

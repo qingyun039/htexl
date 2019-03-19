@@ -45,6 +45,7 @@ sub report{
 	my $pcode = $c->param('pcode');
 	my $sampleid = $c->param('sampleid');
 	my $item = $c->model->fetchItem($pcode, $sampleid);
+	
 	$c->projs->add_item($item);
 	$c->stash(%{$c->projs->items->first->stash})->style;
 	
@@ -54,9 +55,9 @@ sub report{
 	my $template = $c->stash('style')->{template};
 	$c->respond_to(
 	    json => { json => $sdata },
-	    html => { template => "$template/main" },
-	    pdf  => { template => "$template/main" },
-	    tex  => { template => "$template/main", format =>'pdf', handler => 'ltx', latex => 1 },
+	    html => { template => $template },
+	    pdf  => { template => $template },
+	    tex  => { template => $template, format =>'pdf', handler => 'ltx', latex => 1 },
 	);
 }
 

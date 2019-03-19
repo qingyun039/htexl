@@ -1,0 +1,275 @@
+% 中平基因高血糖用药模板
+\documentclass[10pt]{ctexbook}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{calc}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{longtable}
+\usepackage{pdfpages}
+\usepackage[absolute,overlay]{textpos}
+\usepackage[export]{adjustbox}
+\usepackage{background}
+
+\geometry{paperwidth=8.27in,paperheight=11.22in, margin=25mm, includehead, includefoot}
+\fancyhf{}
+\fancyhead[OL]{\includegraphics[scale=1]{zpxthdr.eps}}
+\fancyhead[ER]{\includegraphics[scale=1]{header1.eps}}
+\fancyfoot[OL,RE]{\color{black!60}\sffamily 【\quad\thepage\quad{}】}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\pagestyle{fancy}
+
+\setCJKsansfont{Source Han Sans CN Medium}[BoldFont=Source Han Sans CN Bold]
+\setsansfont{Source Han Sans CN Medium}[BoldFont=Source Han Sans CN Bold]
+
+\setlength{\TPHorizModule}{1mm}
+\setlength{\TPVertModule}{1mm}
+
+\newcommand{\myrule}[1]{
+	\makebox[0pt][l]{\raisebox{-6pt}{\rule{6em}{1.2pt}}}\makebox[6em]{#1}%
+}
+\newcommand{\infopage}{
+	\begin{textblock}{178}(17.5, 180)
+		\LARGE\sffamily\centering\noindent
+			姓\qquad{}名:\myrule{\hyname}\quad{}性\qquad{}别:\myrule{\hysex} \\[1.2em]
+			\ 年\qquad{}龄:\myrule{\hyage}\quad{}样本编号:\myrule{\hycode}
+	\end{textblock}
+}
+
+\definecolor{Main}{RGB}{64,96,154}
+\definecolor{Sub}{RGB}{123,121,121}
+\definecolor{Lne}{RGB}{190,218,243}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}m{#1}}
+\newlength{\tlen}%
+\newlength{\mlen}%
+
+\newcommand{\dsec}[2]{
+	\vspace*{25mm plus 0mm minus 20mm}
+	\noindent
+	{\sffamily\huge\bfseries\color{Main} #1 \\[.5em]
+	 \bfseries\large\color{Sub}%
+	 \settowidth{\mlen}{#2}%
+	 \makebox[0pt][l]{\textcolor{Lne}{\rule[0em]{\mlen}{.3em}}}#2}
+}
+
+\newenvironment{altDescription}{\begin{list}{}{%
+	\settowidth\labelwidth{\altDescriptionlabel{要四个字}}%
+	\setlength\leftmargin{\labelwidth+\labelsep}
+	\let\makelabel\altDescriptionlabel%
+}}{\end{list}}
+\newcommand*\altDescriptionlabel[1]{%
+	\hfil\bfseries\color{Main} #1：%
+}
+
+\definecolor{cd5e8e6}{RGB}{213,232,230}
+\definecolor{c49a8b8}{RGB}{73,168,184}
+\newcommand{\testResult}[4]{%
+\parbox{7cm}{%
+\begin{tikzpicture}[y=0.80pt, x=0.80pt, yscale=-1.00000, xscale=1.00000, inner sep=0pt, outer sep=0pt]
+\begin{scope}[draw=c49a8b8, inner sep=2pt, align=left, font=\sffamily]
+\node[anchor=south west, draw] (allele) at (50, 296.2195) {基因分型：#3};
+\node[anchor=west, draw] (rsid) at (50, 264.5729) {检测位点：#2};
+\node[anchor=north west, draw] (gene) at (50, 232.7366) {检测基因：#1};
+\coordinate (a) at (36.7, 264.5729);
+\draw (a) -- (gene.south west);
+\draw (a) -- (gene.north west);
+\draw (a) -- (rsid.south west);
+\draw (a) -- (rsid.north west);
+\draw (a) -- (allele.south west);
+\draw (a) -- (allele.north west);
+\end{scope}
+
+\begin{scope}% layer1
+  % path1133
+  \path[fill=cd5e8e6,nonzero rule,line width=0.229pt] (37.7777,265.2785) ..
+    controls (37.4474,265.8505) and (36.7162,266.0465) .. (36.1432,265.7161) ..
+    controls (35.5713,265.3858) and (35.3752,264.6546) .. (35.7056,264.0827) ..
+    controls (36.0360,263.5097) and (36.7671,263.3137) .. (37.3401,263.6441) ..
+    controls (37.9121,263.9744) and (38.1081,264.7066) .. (37.7777,265.2785);
+
+  % path1129
+  \path[fill=cd5e8e6,nonzero rule,line width=0.229pt] (37.7777,265.2785) ..
+    controls (37.4474,265.8505) and (36.7162,266.0465) .. (36.1432,265.7161) ..
+    controls (35.5713,265.3858) and (35.3752,264.6546) .. (35.7056,264.0827) ..
+    controls (36.0360,263.5097) and (36.7671,263.3137) .. (37.3401,263.6441) ..
+    controls (37.9121,263.9744) and (38.1081,264.7066) .. (37.7777,265.2785);
+
+  % path1125
+  \path[fill=cd5e8e6,nonzero rule,line width=0.229pt] (37.7777,265.2785) ..
+    controls (37.4474,265.8505) and (36.7162,266.0465) .. (36.1432,265.7161) ..
+    controls (35.5713,265.3858) and (35.3752,264.6546) .. (35.7056,264.0827) ..
+    controls (36.0360,263.5097) and (36.7671,263.3137) .. (37.3401,263.6441) ..
+    controls (37.9121,263.9744) and (38.1081,264.7066) .. (37.7777,265.2785);
+
+  % path626
+  \path[fill=c49a8b8,nonzero rule,line width=0.229pt] (11.2315,280.4720) ..
+    controls (10.9314,280.4720) and (10.5978,280.3714) .. (10.3303,280.2046) ..
+    controls (3.2874,275.8243) and (0.0184,270.8124) .. (0.0227,264.4672) ..
+    controls (0.0292,257.0204) and (3.9406,251.9132) .. (13.5289,246.9122) --
+    (15.0313,246.1453) -- (13.4964,245.4759) .. controls (11.6604,244.6733) and
+    (10.4581,244.1707) .. (9.8905,243.9032) .. controls (2.6126,240.6243) and
+    (0.0433,238.1179) .. (0.0466,234.4448) .. controls (0.0466,233.5100) and
+    (0.8156,232.7421) .. (1.7515,232.7431) .. controls (2.6863,232.7441) and
+    (3.4532,233.5122) .. (3.4521,234.4481) .. controls (3.4510,236.4184) and
+    (5.7874,238.3226) .. (11.2954,240.7987) .. controls (12.0969,241.1659) and
+    (14.2005,242.0693) .. (16.2368,242.9402) .. controls (17.2377,243.3745) and
+    (18.1725,243.7764) .. (18.9069,244.0776) -- (19.2080,244.2108) --
+    (19.5091,244.0776) .. controls (20.2771,243.7439) and (21.3451,243.3106) ..
+    (22.4152,242.8449) .. controls (24.2859,242.0444) and (26.2562,241.2103) ..
+    (26.9581,240.8778) .. controls (32.6036,238.3432) and (35.0429,236.4086) ..
+    (35.0451,234.4383) .. controls (35.0451,233.5035) and (35.8141,232.7355) ..
+    (36.7489,232.7366) .. controls (37.6837,232.7376) and (38.4517,233.5068) ..
+    (38.4506,234.4416) .. controls (38.4473,238.1482) and (35.8076,240.6504) ..
+    (28.3586,243.9844) .. controls (27.5235,244.3505) and (25.2846,245.3178) ..
+    (23.2807,246.1507) .. controls (22.0437,246.6847) and (20.9086,247.1516) ..
+    (20.2738,247.4516) -- (20.1406,247.5176) .. controls (20.0074,247.6174) and
+    (19.8395,247.6844) .. (19.6726,247.7181) -- (19.6055,247.7181) --
+    (19.5383,247.7516) .. controls (12.8237,250.7520) and (8.7477,253.4199) ..
+    (6.2738,256.4235) -- (5.2047,257.7255) -- (26.7111,257.7408) .. controls
+    (27.6459,257.7418) and (28.4139,258.5109) .. (28.4128,259.4457) .. controls
+    (28.4128,260.3805) and (27.6437,261.1485) .. (26.7090,261.1474) --
+    (3.8323,261.1290) -- (3.6980,261.7962) .. controls (3.5312,262.6313) and
+    (3.4304,263.5325) .. (3.4294,264.4684) .. controls (3.4251,269.5441) and
+    (6.1947,273.6201) .. (12.1359,277.3321) .. controls (12.5367,277.5661) and
+    (12.8032,277.9333) .. (12.9028,278.4001) .. controls (13.0025,278.8356) and
+    (12.9353,279.3025) .. (12.7013,279.6697) .. controls (12.3666,280.1711) and
+    (11.7991,280.4701) .. (11.2315,280.4701)(36.7327,296.2196) .. controls
+    (35.7979,296.2186) and (35.0310,295.4505) .. (35.0321,294.5147) .. controls
+    (35.0332,292.5779) and (32.8300,290.7723) .. (27.4564,288.3644) .. controls
+    (26.7880,288.0631) and (24.9846,287.2931) .. (23.0489,286.4904) .. controls
+    (21.7134,285.9218) and (20.3453,285.3531) .. (19.4094,284.9512) --
+    (19.1094,284.8180) -- (18.8094,284.9512) .. controls (18.1410,285.2512) and
+    (17.2723,285.6174) .. (16.4036,285.9846) .. controls (14.3998,286.8511) and
+    (12.2941,287.7177) .. (11.5261,288.0849) .. controls (5.8145,290.5849) and
+    (3.4077,292.5205) .. (3.4055,294.4897) .. controls (3.4055,295.4256) and
+    (2.6365,296.1925) .. (1.7017,296.1925) .. controls (0.7669,296.1914) and
+    (-0.0011,295.4224) .. (0.0000,294.4876) .. controls (0.0034,290.7809) and
+    (2.6430,288.2777) .. (10.0931,284.9436) .. controls (10.8946,284.5775) and
+    (13.0653,283.6438) .. (15.0031,282.8434) .. controls (16.5401,282.1772) and
+    (17.9764,281.5771) .. (18.5440,281.3442) .. controls (25.4601,278.3102) and
+    (29.6693,275.5752) .. (32.1768,272.5044) -- (33.2459,271.2036) --
+    (11.7395,271.1852) .. controls (10.8047,271.1852) and (10.0367,270.4161) ..
+    (10.0378,269.4813) .. controls (10.0389,268.5466) and (10.8069,267.7786) ..
+    (11.7427,267.7797) -- (34.6519,267.7981) -- (34.7862,267.1634) .. controls
+    (34.9530,266.3293) and (35.0548,265.4270) .. (35.0548,264.4923) .. controls
+    (35.0591,259.4165) and (32.2895,255.3394) .. (26.3493,251.6285) .. controls
+    (25.5478,251.1270) and (25.3138,250.0915) .. (25.8164,249.2899) .. controls
+    (26.1175,248.7895) and (26.6851,248.4894) .. (27.2527,248.4905) .. controls
+    (27.5874,248.4905) and (27.8864,248.5903) .. (28.1539,248.7579) .. controls
+    (35.1642,253.1383) and (38.4322,258.1501) .. (38.4279,264.5279) .. controls
+    (38.4224,272.0082) and (34.4775,277.1154) .. (24.7885,282.1500) --
+    (23.2850,282.9169) -- (25.8554,284.0207) .. controls (27.1585,284.5904) and
+    (28.2926,285.0584) .. (28.8276,285.2923) .. controls (35.9040,288.4704) and
+    (38.4073,290.8772) .. (38.4040,294.5503) .. controls (38.4376,295.4526) and
+    (37.6685,296.2195) .. (36.7327,296.2195);
+
+  % path1121
+  \path[fill=cd5e8e6,nonzero rule,line width=0.229pt] (37.7777,265.2785) ..
+    controls (37.4474,265.8505) and (36.7162,266.0465) .. (36.1432,265.7161) ..
+    controls (35.5713,265.3858) and (35.3752,264.6546) .. (35.7056,264.0827) ..
+    controls (36.0360,263.5097) and (36.7671,263.3137) .. (37.3401,263.6441) ..
+    controls (37.9121,263.9744) and (38.1081,264.7066) .. (37.7777,265.2785);
+\end{scope}
+\end{tikzpicture}
+
+检测结果： #4 \\[3em minus 1em]
+}
+}
+
+! my $ad_crock = begin
+!		my $ad = shift;
+!		if($ad eq '正常用药'){
+			{\large\textbf{正常服用}}\\此药物在您体内效果好 , 毒副作用低或代谢正常 , 可按照药物说明或医生推荐剂量服用
+!		}elsif($ad =~ /不良反应风险增加/){
+			{\large\textbf{不良反应风险增加}}\\表示根据基因检测位点 , 此药物在您体内不良反应风险增加 , 建议谨遵医嘱服用 , 以避免药物不良反应对您造成损伤
+!		}else{
+			{\large\textbf{效果差, 谨遵医嘱}\\此药物在您体内治疗效果差 , 建议谨遵医嘱服用 , 以避免药物不良反应对您造成损伤
+!       }
+! end	
+! my $gu_crock = begin
+!		my $ad = shift;
+!		if($ad eq '正常用药'){
+			正常服用
+!		}elsif($ad =~ /不良反应风险增加/){
+			不良反应风险增加
+!		}else{
+			效果差, 谨遵医嘱
+!       }
+! end	
+!= include 'layouts/userinfo';
+
+\begin{document}
+! my $tpl = 'zpxt.pdf'; my $label=0;
+\sffamily\color{black!80!white}\fboxrule=0pt
+\includepdf[pages=<!= $item->{'性别'} eq '男' ? 1 : 2 !>,pagecommand={\thispagestyle{empty}\infopage}]{<!= $tpl !>}
+\includepdf[pages={3-5}]{<!= $tpl !>}
+\setcounter{page}{1}
+\includepdf[pages={6},pagecommand={}]{<!= $tpl !>}
+\dsec{糖尿病基因检测结果}{DIABETES TEST RESULTS}
+
+\vspace{15mm}
+	\begin{center}
+	\arrayrulewidth=1pt
+	\arrayrulecolor{Main!70!white}
+	\setlength{\tlen}{\textwidth-6\tabcolsep}
+! my $class = '';
+! for my $drug (@{$result->{slist}}){
+!   if($drug->{type_name} ne $class){
+!      if($class ne ''){
+	\end{longtable}
+
+	\addvspace{1cm}	
+!      }
+!      $class = $drug->{type_name};
+	\noindent
+	\begin{longtable}{|m{.48\tlen}|P{.26\tlen}|P{.26\tlen}|}
+		\hline
+		\rowcolor{Main}
+		\multicolumn{3}{|c|}{\color{white}\Large \rule{0pt}{18pt}<!= $class !>} \\\hline
+		\multicolumn{1}{|c|}{\color{black!90}药物中文名} & \multicolumn{1}{c|}{\color{black!90}成分} & \multicolumn{1}{c|}{\color{black!90}用药指导} \\\hline	
+		\endhead
+!   }
+	    	<!= $drug->{shopName} !> & <!= $drug->{chemica_name} !> & <!= $gu_crock->($drug->{guide}) !> \\\hline
+
+! }
+	\end{longtable}
+	
+	\includegraphics[width=\textwidth]{zpxyimg.png}
+	\end{center}
+! $class = '';my $page = 9; my $img = 1;
+! foreach my $c (@{$result->{component}}){
+!	if(exists $result->{cinfo}{$c}){
+!       my $cinfo = $result->{cinfo}{$c};
+!       my $crt   = $result->{clist}{$c};
+!       if($class ne $crt->{type_name}){
+	\includepdf[pages=<!= $page !>,pagecommand={\label{Lb<!= $label++ !>}}]{<!= $tpl !>}
+!           $class = $crt->{type_name}; $page++;
+!       }
+	\newpage
+	\dsec{<!= $c !>}{<!= $cinfo->[0] !>}
+
+	\vspace{15mm plus 0mm minus 10mm}
+	\begin{altDescription}
+		\item[商品名称] <!= $crt->{goods_name} !>
+		\item[<!= $c !>] <!= $crt->{type_name} !>
+		\item[药物知识] <!= $cinfo->[1] !>
+	%	\item[用药建议] <!= $ad_crock->($crt->{rsInfo}[0]{guide}) !>
+	\end{altDescription}
+
+	\vspace{3em plus 1em minus 1em}
+	\hspace*{4em}\parbox{14.5cm}{%
+!   	foreach my $rs (@{$crt->{rsInfo}}){
+	\adjustbox{valign=T}{\testResult{<!= $rs->{gene} !>}{<!= $rs->{rs} !>}{<!= $rs->{type} !>}{<!= $rs->{guide} !>}}
+!    		if(@{$crt->{rsInfo}} == 1){
+	\includegraphics[width=6.7cm, valign=T]{zpxyimg<!= $img++ !>.png}	
+!			}		
+!		}
+	}
+!       $page++;
+!   }
+! }
+\includepdf[pages={24-52},pagecommand={}]{<!= $tpl !>}
+\end{document}

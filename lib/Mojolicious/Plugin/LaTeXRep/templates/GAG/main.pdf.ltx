@@ -1,0 +1,227 @@
+% 儿童天赋+健康基因检测报告模板
+\documentclass[10pt]{ctexbook}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{calc}
+\usepackage{xcolor}
+\usepackage{etoolbox}
+\usepackage{pdfpages}
+\usepackage[absolute,overlay]{textpos}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage{background}
+
+
+\geometry{paperwidth=8.27in,paperheight=11.22in, margin=25mm, includehead, includefoot}
+\fancyhf{}
+\fancyhead[OL]{\includegraphics[scale=1]{zpgaghdr.eps}}
+\fancyhead[ER]{\includegraphics[scale=1]{header1.eps}}
+\fancyfoot[OL,RE]{\color{black!60}\sffamily 【\quad\thepage\quad{}】}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\pagestyle{fancy}
+
+\setCJKsansfont{Source Han Sans CN Medium}[BoldFont=Source Han Sans CN Bold]
+\setsansfont{Source Han Sans CN Medium}[BoldFont=Source Han Sans CN Bold]
+
+\setlength{\TPHorizModule}{1mm}
+\setlength{\TPVertModule}{1mm}
+
+% 检测信息页
+\newCJKfontfamily{\SST}{ShiShangZhongHeiJianTi}
+\newfontfamily{\SSTE}{ShiShangZhongHeiJianTi}
+\newcommand{\myrule}[1]{
+	\makebox[0pt][l]{\raisebox{-6pt}{\rule{6em}{1.2pt}}}\makebox[6em]{#1}
+}
+\newcommand{\infopage}{
+	\begin{textblock}{178}(17.5, 180)
+		\Large\SST\SSTE\centering\noindent
+			姓\qquad{}名:\myrule{\hyname}\quad{}性\qquad{}别:\myrule{\hysex} \\[1.2em]
+			\ 年\qquad{}龄:\myrule{\hyage}\quad{}样本编号:\myrule{\hycode}
+	\end{textblock}
+}
+
+% 结果汇总
+\newcommand{\rada}[1]{
+	\begin{tikzpicture}[every node/.style={font=\sffamily\color{gray}}]
+	\foreach[count=\ii] \x/\s in {0/音乐,36/舞蹈,72/语言,108/专注力,144/记忆力,180/运动,216/好奇心,252/认知,288/应变能力,324/数学}{
+		\coordinate (c\ii) at (\x:5.5);
+		\node[label=\x:\s] at (c\ii) {};
+	}
+	\coordinate (v) at (0:0);
+	\foreach[count=\ii] \f in {0.25,0.375,...,1}{
+		\draw[red] ($(v)!\f!(c1)$) foreach \i in {2,3,...,10} { -- ($(v)!\f!(c\i)$) } -- cycle;
+		\coordinate (h\ii) at ($(v)!\f!(c8)$);
+	}	
+	\foreach \i/\j in {1/40,2/50,3/60,4/70,5/80,6/90,7/100}{
+		\node[above] at (h\i -| v) {\j};
+	}
+%	\def\slist{0.24,0.34,0.44,0.37,0.56,0.76,0.68,0.67,0.45}
+	\def\slist{#1}
+	\foreach[count=\ii] \st[evaluate=\st as \s using (\st*0.0125-0.25)] in \slist {
+		\coordinate (s\ii) at ($(v)!\s!(c\ii)$);
+		\fill[red!70!gray] (s\ii) circle (3pt);
+		\node[circle,sloped] at ($(s\ii)!12pt!(c\ii)$) {\st};
+	}
+	\foreach[count=\b] \a in {2,3,...,10,1}{ \coordinate (tmp\b) at ($(s\b)!.5!(s\a)$); }
+	\foreach \i in {1,2,...,10}{
+		 \coordinate (d\i) at ($(tmp\i)!.5cm!-90:(s\i)$); 
+%		 \fill (d\i) circle (2pt);
+	}
+	\fill[red!70, opacity=.7] (s1) foreach[count=\j] \i in {2,3,...,10}{ ..controls(d\j).. (s\i) } .. controls(d9) .. cycle;
+	
+	\end{tikzpicture}
+}
+
+\newcommand{\radao}[1]{
+	\begin{tikzpicture}[every node/.style={font=\sffamily\color{gray}}]
+	\foreach[count=\ii] \x/\s in {0/乳糖不耐受,60/近视,120/肥胖,180/易多动,240/身高,300/骨密度}{
+		\coordinate (c\ii) at (\x:5.5);
+		\node[label=\x:\s] at (c\ii) {};
+	}
+	\coordinate (v) at (0:0);
+	\foreach[count=\ii] \f in {0.25,0.375,...,1}{
+		\draw[red] ($(v)!\f!(c1)$) foreach \i in {2,3,...,6} { -- ($(v)!\f!(c\i)$) } -- cycle;
+		\coordinate (h\ii) at ($(v)!\f!(c5)$);
+	}	
+	\foreach \i/\j in {1/0.5,2/1.0,3/1.5,4/2.0,5/2.5,6/3.0,7/3.5}{
+		\node[above] at (h\i -| v) {\j};
+	}
+%	\def\slist{0.24,0.34,0.44,0.37,0.56,0.76,0.68,0.67,0.45}
+	\def\slist{#1}
+	\foreach[count=\ii] \st[evaluate=\st as \s using (\st*0.25+0.125)] in \slist {
+		\coordinate (s\ii) at ($(v)!\s!(c\ii)$);
+		\fill[red!70!gray] (s\ii) circle (3pt);
+		\node[circle,sloped] at ($(s\ii)!12pt!(c\ii)$) {\st};
+	}
+	\foreach[count=\b] \a in {2,3,...,6,1}{ \coordinate (tmp\b) at ($(s\b)!.5!(s\a)$); }
+	\foreach \i in {1,2,...,6}{
+		 \coordinate (d\i) at ($(tmp\i)!.5cm!-90:(s\i)$); 
+%		 \fill (d\i) circle (2pt);
+	}
+	\fill[red!70, opacity=.7] (s1) foreach[count=\j] \i in {2,3,...,6}{ ..controls(d\j).. (s\i) } .. controls(d9) .. cycle;
+	
+	\end{tikzpicture}
+}
+% eps图片
+\newcounter{gene}
+\newcounter{rsid}
+\newcounter{geno}
+\newcommand{\addGene}[1]{%
+	\stepcounter{gene}%
+	\csdef{gene\thegene}{#1}%
+}
+\newcommand{\addRsid}[1]{%
+	\stepcounter{rsid}%
+	\csdef{rsid\thersid}{#1}%
+}
+\newcommand{\addGeno}[1]{%
+	\stepcounter{geno}%
+	\csdef{geno\thegeno}{#1}
+}
+\newcommand{\A}[1]{%
+	\raisebox{8pt}{\textcolor{gray}{\sffamily~检测位点： \csuse{rsid#1}}}%
+}
+\newcommand{\B}[1]{%
+	\raisebox{8pt}{\textcolor{gray}{\sffamily~检测基因： \csuse{gene#1}}}%
+}
+\newcommand{\C}[1]{%
+	\raisebox{8pt}{\textcolor{gray}{\sffamily~基因分型： \csuse{geno#1}}}%
+}
+
+!= include 'layouts/userinfo';
+
+\input{tools}
+\begin{document}
+! my $tpl = 'zpgag.pdf';
+<!
+my $paper_height = 285;
+my $trims_above = 60; 
+my $trims_below = [154, 154, 139, 144, 146, 135, 144, -1, 138, 131, 136, 
+				   136, 146, 136, 136, 141, 136, 126, 132, 131, 136, 135];
+!>
+\includepdf[pages=1, pagecommand={\thispagestyle{empty}\infopage}]{<!= $tpl !>}
+\includepdf[pages={2-5}]{<!= $tpl !>}
+\setcounter{page}{1}
+\vspace*{20mm}
+\includepdfpart{6}{5.9cm}{19.4cm}{<!= $tpl !>}
+
+\vspace{5mm}\centering
+\rada{<!= join ',', map {$_->{result}} @{$result}[0...9]; !>}
+
+\includepdfpart{6}{21cm}{5cm}{<!= $tpl !>}
+\newpage
+\vspace*{20mm}
+\includepdfpart{71}{59mm}{193mm}{<!= $tpl !>}
+
+\vspace{5mm}\centering
+\radao{<!= join ',', map {length($_->{result})/3} @{$result}[10...15]; !>}
+
+\includepdfpart{71}{200mm}{50mm}{<!= $tpl !>}
+\includepdf[pages=7,pagecommand={}]{<!= $tpl !>}
+! my $page = 8;
+% 天赋能力
+! for(my $i=0; $i<10; $i++){
+!    my $test = $result->[$i];
+!    my $loci = $test->{loci};
+\setcounter{gene}{0}\setcounter{rsid}{0}\setcounter{geno}{0}
+!    foreach my $rs (@$loci){
+\addGene{<!= $rs->{gene} !>}\addRsid{<!= $rs->{rsid} !>}\addGeno{<!= $rs->{genotype} !>}
+!    }
+!    if($trims_below->[$i] > 0 ){
+\vspace*{20mm}
+\includepdfpart{<!= $page++ !>}{<!= $trims_above !>mm}{<!= $paper_height - $trims_below->[$i] !>mm}{<!= $tpl !>}
+\vspace*{3cm minus 2cm}
+\begin{center}
+	\input{zpgageps<!= $i+1 !>.eps_tex}
+
+	{\sffamily\bfseries <!= $test->{phenotype} !>天赋（\quad <!= $test->{result} !>分\quad）}
+\end{center}
+!    }else{
+\includepdf[pages=<!= $page++ !>,pagecommand={}]{<!= $tpl !>}
+\vspace*{3cm minus 2cm}
+\begin{center}
+	\input{zpgageps<!= $i+1 !>.eps_tex}
+
+	{\sffamily\bfseries <!= $test->{phenotype} !>天赋（\quad <!= $test->{result} !>分\quad）}
+\end{center}
+!       $page++;
+! }
+\includepdf[pages=<!= $page++ !>,pagecommand={}]{<!= $tpl !>}
+\includepdf[pages=<!= $page++ !>,pagecommand={}]{<!= $tpl !>}
+! }
+% 成长发育
+\includepdf[pages=39,pagecommand={}]{<!= $tpl !>}
+! $page = 40;
+! for(my $i=10; $i<16; $i++){
+!    my $test = $result->[$i];
+!    my $loci = $test->{loci};
+\setcounter{gene}{0}\setcounter{rsid}{0}\setcounter{geno}{0}
+!    foreach my $rs (@$loci){
+\addGene{<!= $rs->{gene} !>}\addRsid{<!= $rs->{rsid} !>}\addGeno{<!= $rs->{genotype} !>}
+!    }
+!    if($trims_below->[$i] > 0 ){
+\vspace*{20mm}
+\includepdfpart{<!= $page++ !>}{<!= $trims_above !>mm}{<!= $paper_height - $trims_below->[$i] !>mm}{<!= $tpl !>}
+\vspace*{3cm minus 2cm}
+\begin{center}
+	\input{zpone.eps_tex}
+
+	{\sffamily\bfseries <!= $test->{phenotype} !>检测结果（\quad <!= $test->{result} !>\quad）}
+\end{center}
+!    }else{
+\includepdf[pages=<!= $page++ !>,pagecommand={}]{<!= $tpl !>}
+\vspace*{3cm minus 2cm}
+\begin{center}
+	\input{zpgageps<!= $i+1 !>.eps_tex}
+
+	{\sffamily\bfseries <!= $test->{phenotype} !>检测结果（\quad <!= $test->{result} !>分\quad）}
+\end{center}
+!       $page++;
+! }
+\includepdf[pages=<!= $page++ !>,pagecommand={}]{<!= $tpl !>}
+! }
+\includepdf[pages={52-69},pagecommand={}]{<!= $tpl !>}
+\end{document}

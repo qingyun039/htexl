@@ -63,7 +63,7 @@ sub run{
 			my $c = $self->app->build_controller->stash(%{$_->stash})->style($query);
 			
 			# 这里为什么要encode????
-			$output = $c->render_to_string(template => $c->stash->{style}{template}."/main" )->encode('utf8')->to_string;
+			$output = $c->render_to_string(template => $c->stash->{style}{template} )->encode('utf8')->to_string;
 			return $output unless($outdir);
 			my $mf = Mojo::File->new($outdir);
 			

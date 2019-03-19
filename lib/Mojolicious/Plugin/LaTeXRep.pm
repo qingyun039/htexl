@@ -53,7 +53,7 @@ sub _style{
     $c->req->url->query($query);
   }
   # 寻找模板
-  $style->{template} = $c->stash->{item}{'检测项目'};
+  $style->{template} = $c->stash->{item}{'检测项目'}."/main";
   # 其它与模板相关的参数
   $style = { %$style, %{$c->req->params->to_hash} };
   $c->stash(style => $style);

@@ -14,8 +14,10 @@
 
 \geometry{paperwidth=8.27in,paperheight=11.22in, margin=25mm, includehead, includefoot}
 \fancyhf{}
-\fancyhead[OL]{\color{black!60}\sffamily SCIENCE ENLIGHTEN LIFE}
-\fancyhead[ER]{\color{black!60}\sffamily 中\ 平\ 基\ 因\ ---\ 高\ 血\ 压\ 基\ 因\ 检\ 测}
+%\fancyhead[OL]{\color{black!60}\sffamily SCIENCE ENLIGHTEN LIFE}
+%\fancyhead[ER]{\color{black!60}\sffamily 中\ 平\ 基\ 因\ ---\ 高\ 血\ 压\ 基\ 因\ 检\ 测}
+\fancyhead[OL]{\includegraphics[scale=1]{header1.eps}}
+\fancyhead[ER]{\includegraphics[scale=1]{zpxyhdr.eps}}
 \fancyfoot[OL,RE]{\color{black!60}\sffamily 【\quad\thepage\quad{}】}
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0pt}
@@ -75,6 +77,7 @@
 \newcolumntype{P}[1]{>{\centering\arraybackslash}m{#1}}
 \newlength{\tlen}%
 \newlength{\mlen}%
+
 \newcommand{\dsec}[2]{
 	\vspace*{25mm plus 0mm minus 20mm}
 	\noindent
@@ -118,7 +121,7 @@
 \begin{document}
 ! my $tpl = 'zpxy.pdf'; my $label=0;
 	\sffamily\color{black!80!white}\fboxrule=0pt
-	\includepdf[pages=1]{<!= $tpl !>}
+%	\includepdf[pages=1]{<!= $tpl !>}
 	\includepdf[pages=<!= $item->{'性别'} eq '男' ? 2 : 25 !>,pagecommand={\thispagestyle{empty}\infopage}]{<!= $tpl !>}
 	\includepdf[pages={3-4}]{<!= $tpl !>}
 	\includepdf[pages=5,pagecommand={\thispagestyle{empty}\mtoc}]{<!= $tpl !>}
@@ -214,5 +217,5 @@
 \includepdf[pages={13-18},pagecommand={}]{<!= $tpl !>}
 \includepdf[pages=19,pagecommand={\label{Lb<!= $label++ !>}}]{<!= $tpl !>}
 \includepdf[pages={20-23},pagecommand={}]{<!= $tpl !>}
-\includepdf[pages=24]{<!= $tpl !>}
+%\includepdf[pages=24]{<!= $tpl !>}
 \end{document}

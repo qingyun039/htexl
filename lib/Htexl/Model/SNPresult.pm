@@ -81,6 +81,7 @@ sub fetchItem {
     my $item = $self->pg->db->select(
         $self->item_tbl, '*', {'条形码' => $sampleid, '检测项目' => $pcode}
     )->hash;
+    
     my $snps = $self->pg->db->select(
         $self->snp_tbl, ['位点', '碱基'],{'样本' => $item->{id}}
     )->arrays->flatten->to_array;

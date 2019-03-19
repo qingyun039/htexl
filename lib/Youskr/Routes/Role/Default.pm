@@ -13,6 +13,7 @@ sub findc {
 	return 'SGYG' if $old_pcode eq 'DK-E';
 	return $old_pcode if $old_pcode ~~ any(@{$self->pcodes});
 	return 'SGYY' if $old_pcode ~~ any(qw/XY XT XZ/);
+	return 'TMR' if $old_pcode =~ /TMR.+/;
 	return undef;
 }
 
