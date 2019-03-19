@@ -22,7 +22,7 @@ sub upload {
 		my $upload = $c->param('snp_result');
 		my $name = $upload->filename;
 		my $xlsfile = $c->app->config->{'upload_dir'}->child("xls",$name)->to_string;
-		print $xlsfile;
+		
 		if($upload->move_to($xlsfile)){
 			my $rt = $c->model->xlstoDB($xlsfile);
 			return $c->render(text => "检测结果: $name 导入数据库成功") if $rt;

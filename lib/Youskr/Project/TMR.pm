@@ -43,7 +43,7 @@ sub _data{
 
 sub tumors {
 	my $self = shift;
-	if($self->{'检测项目'} eq 'TMR'){
+	if($self->{'检测项目'} =~ /TMR/){
 		if($self->{'性别'} eq '女'){
 			return qw/肺癌 肝癌 胃癌 结直肠癌 食管癌 脑癌 甲状腺癌 膀胱癌 胰腺癌 乳腺癌 宫颈癌 卵巢癌/;
 		}else{
