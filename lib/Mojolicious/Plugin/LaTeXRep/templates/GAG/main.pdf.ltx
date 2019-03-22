@@ -11,7 +11,7 @@
 \usepackage[absolute,overlay]{textpos}
 \usepackage{tikz}
 \usetikzlibrary{calc}
-\usepackage{background}
+%\usepackage{background}
 
 
 \geometry{paperwidth=8.27in,paperheight=11.22in, margin=25mm, includehead, includefoot}
@@ -44,7 +44,7 @@
 }
 
 % 结果汇总
-\newcommand{\rada}[1]{
+\newcommand{\radai}[1]{
 	\begin{tikzpicture}[every node/.style={font=\sffamily\color{gray}}]
 	\foreach[count=\ii] \x/\s in {0/音乐,36/舞蹈,72/语言,108/专注力,144/记忆力,180/运动,216/好奇心,252/认知,288/应变能力,324/数学}{
 		\coordinate (c\ii) at (\x:5.5);
@@ -70,7 +70,7 @@
 		 \coordinate (d\i) at ($(tmp\i)!.5cm!-90:(s\i)$); 
 %		 \fill (d\i) circle (2pt);
 	}
-	\fill[red!70, opacity=.7] (s1) foreach[count=\j] \i in {2,3,...,10}{ ..controls(d\j).. (s\i) } .. controls(d9) .. cycle;
+	\fill[red!70, opacity=.7] (s1) foreach[count=\j] \i in {2,3,...,10}{ ..controls(d\j).. (s\i) } .. controls(d10) .. cycle;
 	
 	\end{tikzpicture}
 }
@@ -149,7 +149,7 @@ my $trims_below = [154, 154, 139, 144, 146, 135, 144, -1, 138, 131, 136,
 \includepdfpart{6}{5.9cm}{19.4cm}{<!= $tpl !>}
 
 \vspace{5mm}\centering
-\rada{<!= join ',', map {$_->{result}} @{$result}[0...9]; !>}
+\radai{<!= join ',', map {$_->{result}} @{$result}[0...9]; !>}
 
 \includepdfpart{6}{21cm}{5cm}{<!= $tpl !>}
 \newpage

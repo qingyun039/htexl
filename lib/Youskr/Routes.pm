@@ -62,7 +62,7 @@ sub route{
 		
 		if(@maybe_pcodes){
 		    my $pcodes = join ", ", @maybe_pcodes;
-		    $log->warn("maybe you want generate thoes project's report: $pcodes\nplease use --pcode to specify\n");
+		    $log->warn("maybe you want generate thoes project's report: $pcodes");
 		}
 		
 		$log->warn("I guest the project is: $pcode");
@@ -76,7 +76,7 @@ sub route{
     my $project = $module->new($item); # Mojo::Base 的特性, 可传入哈希引用.
 #    $self->projects->add_item($project);
 
-    return $project->validate($pcode) ? $project : undef;     # 返回什么好呢？ 返回项目对象, 减少两个类的依赖
+    return $project->validate($pcode) ? $project : ($log->warn("validate error"), undef);     # 返回什么好呢？ 返回项目对象, 减少两个类的依赖
 }
 
 sub _project{

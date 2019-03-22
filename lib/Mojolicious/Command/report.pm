@@ -74,7 +74,7 @@ sub run{
 			return $mf->child($_->{'姓名'}.$_->{'条形码'}.$_->{'检测项目'}.'.tex')->spurt($output)->to_abs;
 		}
 		return $output;
-	})->each(sub{print});
+	})->each(sub{print "---- $_\n"});
 
 }
 
