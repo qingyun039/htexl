@@ -48,6 +48,7 @@ sub _data{
 	my %relation = %{$self->RELATION};
 	my $data;
 	foreach my $gift (keys %relation){
+		my $rsnum = 0;
 		foreach my $gene (keys %{$relation{$gift}}){
 			foreach my $rsid (keys %{$relation{$gift}{$gene}}){
 				my %criteria = %{$relation{$gift}{$gene}{$rsid}};
@@ -65,11 +66,13 @@ sub _data{
 					$data->{$gift}{risk} = $risk;
 					@genotypes = sort { length $criteria{$a} <=> length $criteria{$b} } keys %criteria;
 				}
+				$rsnum++;
 
 				# 表格数据
-				push @{$data->{$gift}{genes}}, [$gene, $rsid, @genotypes];
+				push @{$data->{$gift}{genes}}, [$gene, $rsid, @genotypes, $risk];
 			}
 		}
+		$data->{$gift}{risk} = sprintf("%d", $data->{$gift}{risk} / $rsnum) if $data->{$gift}{risk} =~ /^\d+$/;
 	}
 
 	return $data;
@@ -186,34 +189,37 @@ sub RELATION  {
 	},
 	# 满脑子都是骚操作T-T
 	HEIGHT => { # 身高 --------------------
-	    HMGA2 => { rs1042725 => { CC => '高水平       ', CT => '平均水平', TT => '低水平' }},
+	    HMGA2 => { rs1042725 => { CC => '高水平       ', CT => '平均水平  ', TT => '低水平' }},
 	},
 	SHORTSIGHT => { # 近视 -----------------
-	    LRRC4C => { rs1381566 => { GG => '高风险      ', GT => '中风险', TT => '低风险' }},
+	    LRRC4C => { rs1381566 => { GG => '高风险      ', GT => '中风险   ', TT => '低风险' }},
 	}, 
 	THOOTH => { # 牙发育 ------------------
-	    HMGA2 => { rs17179670 => { AA => '正常数量                   ', AG => '比一般数量少1个', GG => '少1到2个' }},
+	    HMGA2 => { rs17179670 => { AA => '正常数量', AG => '比一般数量少1个', GG => '少1到2个     ' }},
 	},
 	MILK => { # 牛奶吸收能力 -----------------
-	    MCM6 => { rs4988235 => { AA => '优秀  ', AG => '良好 ', GG => '一般' }},
+	    MCM6 => { rs4988235 => { AA => '优秀       ', AG => '良好    ', GG => '一般 ' }},
 	},
 	WEIGHT => { # 体重 -----------------
-	    FTO => { rs6232 => { CC => '高水平         ', CT => '平均水平', TT => '低水平' }},
+	    FTO => { rs6232 => { CC => '高水平      ', CT => '平均水平  ', TT => '低水平' }},
 	},
 	LUNG => { # 肺活量 ------------------
-	    WWOX => { rs1079572 => { GG => '优秀  ', GA => '良好 ', AA => '一般' }},
+	    WWOX => { rs1079572 => { GG => '优秀       ', GA => '良好    ', AA => '一般 ' }},
 	},
 	BONE => { # 骨密度 ------------------
-	    VDR => { rs1544410 => { CC => '优秀  ', CT => '良好 ', TT => '一般' }},
+	    VDR => { rs1544410 => { CC => '优秀       ', CT => '良好    ', TT => '一般 ' }},
 	},
 	MUSCLE => { # 肌肉力量 -------------------
-	    CNTF => { rs1800169 => { AA => '优秀  ', AG => '良好 ', GG => '一般' }},
+	    CNTF => { rs1800169 => { AA => '优秀       ', AG => '良好    ', GG => '一般 ' }},
 	},
 	BURST => { # 爆发性 --------------
-	    ACTN3 => { rs1815739 => { CC => '优秀  ', CT => '良好 ', TT => '一般' }},
+	    ACTN3 => { rs1815739 => { CC => '优秀       ', CT => '良好    ', TT => '一般 ' }},
 	},
 	FLEX => { # 身体柔韧性 ---------------
-	    COL9A3 => { rs61734651 => { CC => '优秀  ', CT => '良好 ', TT => '一般' }},
+	    COL9A3 => { rs61734651 => { CC => '优秀       ', CT => '良好    ', TT => '一般 ' }},
+	},
+	DUODONG => {#易多动
+		DRD2 => { rs1800497 => { AA => '高风险      ', AG => '中风险   ', GG => '低风险' }},
 	},
     };
 }

@@ -1,0 +1,63 @@
+% 中平模板布局
+\documentclass[10pt]{ctexbook}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{calc}
+\usepackage[table]{xcolor}
+\usepackage{tabu}
+\usepackage{etoolbox}
+\usepackage{pdfpages}
+\usepackage[absolute,overlay]{textpos}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+
+\newCJKfontfamily{\HYZYJ}{HYZongYiJ}
+\newfontfamily{\HYZYJe}{HYZongYiJ}
+
+\definecolor{zpgenemain}{RGB}{79,76,76}
+\geometry{paperwidth=8.27in,paperheight=11.22in, margin=25mm, includehead, includefoot}
+\fancyhf{}
+\fancyhead[OL]{\raisebox{-1pt}{\includegraphics[height=9.5pt]{hdr1.eps}}\color{zpgenemain}\HYZYJ\HYZYJe——\zphdr}
+\fancyhead[ER]{\includegraphics[scale=1]{header1.eps}}
+\fancyfoot[OL,RE]{\color{black!60}\sffamily 【\quad\thepage\quad{}】}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\pagestyle{fancy}
+
+\setCJKsansfont{Source Han Sans CN Medium}[BoldFont=Source Han Sans CN Bold]
+\setsansfont{Source Han Sans CN Medium}[BoldFont=Source Han Sans CN Bold]
+
+\setlength{\TPHorizModule}{1mm}
+\setlength{\TPVertModule}{1mm}
+
+\newcommand{\zphdr}[1]{\renewcommand{\zphdr}{#1}}
+!= include 'layouts/userinfo';
+\newCJKfontfamily{\SST}{ShiShangZhongHeiJianTi}
+\newfontfamily{\SSTE}{ShiShangZhongHeiJianTi}
+\newcommand{\myrule}[1]{
+	\makebox[0pt][l]{\raisebox{-6pt}{\rule{6em}{1.2pt}}}\makebox[6em]{#1}
+}
+\newcommand{\infopagechild}{
+	\begin{textblock}{178}(17.5, 180)
+		\Large\SST\SSTE\centering\noindent
+			姓\qquad{}名:\myrule{\hyname}\quad{}性\qquad{}别:\myrule{\hysex} \\[1.2em]
+			\ 年\qquad{}龄:\myrule{\hyage}\quad{}样本编号:\myrule{\hycode}
+	\end{textblock}
+}
+
+\newcommand{\infopageadult}{
+	\begin{textblock}{178}(17.5, 180)
+		\LARGE\sffamily\centering\noindent
+			姓\qquad{}名:\myrule{\hyname}\quad{}性\qquad{}别:\myrule{\hysex} \\[1.2em]
+			\ 年\qquad{}龄:\myrule{\hyage}\quad{}样本编号:\myrule{\hycode}
+	\end{textblock}
+}
+
+\input{tools}
+\begin{document}
+
+<!= content !>
+
+\end{document}

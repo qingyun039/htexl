@@ -1,0 +1,67 @@
+! layout 'zpgene';
+\zphdr{全面营养代谢基因检测}
+<!
+my $sex = $item->{'性别'} eq '男' ? 1 : 0;
+my $tpl = "zpmbl.pdf";
+my @class = ([qw/维生素A 维生素B12 维生素B2 维生素B6 维生素C 维生素D 维生素E/],
+			 [qw/钾 钙 铁 硒 锌/],[qw/酒精代谢 叶酸代谢 乳糖代谢 DHA/]);
+my @names = qw/维生素类 矿物质 其它代谢类/;
+
+my $paper_height = 285;
+my $trims_above = 62; 
+my @trims_below = qw/165 167 139 149 144 151 154 145 149 159 157 144 154 139 154 135/;
+
+!>
+\includepdf[pages=<!= $sex ? 1 : 2 !>, pagecommand={\thispagestyle{empty}\infopageadult}]{<!= $tpl !>}
+\includepdf[pages={3-5}]{<!= $tpl !>}
+\setcounter{page}{1}
+\includepdf[pages=6,pagecommand={}]{<!= $tpl !>}
+\vspace*{20mm}
+\includepdfpart{7}{62mm}{208mm}{<!= $tpl !>}
+\vspace*{10mm}
+\definecolor{tblhdr}{RGB}{129,212,239}
+{
+	\sffamily\large\color{black!80}
+	\taburowcolors 2{tblhdr .. tblhdr}\everyrow{\hline}\tabulinesep=2mm
+! for(my $i=0; $i<@class; $i++){
+	<!= $i == 2 ? '\newpage\vspace*{20mm}' : '' !>
+	\noindent
+	\begin{tabu} to \textwidth {|X[3,c,m]|X[7,c,m]|}
+	\hline\rowfont{\color{white}}
+	\multicolumn{2}{|c|}{<!= $names[$i] !>} \\ 
+	\taburowcolors 2{white .. white}
+	项目名称 & 检测评估 \\  
+!     foreach my $mbl (@{$class[$i]}){
+	<!= $mbl !> & <!= $result->{$mbl}{advice} !> \\ 
+!     }
+	\end{tabu}
+
+	\vspace*{10mm}
+! }
+}
+\includepdfpart{8}{124mm}{49mm}{<!= $tpl !>}
+
+\newpage
+\definecolor{BlackMore}{RGB}{78,78,78}
+! my $page=9;
+! for(my $i=0; $i<@class; $i++){
+\includepdf[pages=<!= $page++ !>]{<!= $tpl !>}
+!     foreach my $mbl (@{$class[$i]}){
+
+\vspace*{20mm minus 10mm}
+\includepdfpart{<!= $page++ !>}{<!= $trims_above!>mm}{<!= $paper_height - (shift @trims_below) !>mm}{<!= $tpl !>}
+\vspace*{15mm minus 5mm}
+\begin{center}
+\genepic{BlackMore}{<!= join ',', map {join '/', @{$_}{qw/gene rsid genotype/}} @{$result->{$mbl}{genes}} !>}
+
+\vspace*{5mm}
+{\sffamily\bfseries\Large
+<!= $result->{$mbl}{advice} !>
+}
+\end{center}
+\includepdf[pages=<!= $page++ !>,pagecommand={}]{<!= $tpl !>}
+!     }
+
+! }
+
+\includepdf[pages={44-66},pagecommand={}]{<!= $tpl !>}

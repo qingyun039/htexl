@@ -1,7 +1,82 @@
-! layout 'default';
+! use Smart::Match qw/any/;
+! layout 'zpgene';
+\zphdr{儿童优势潜能基因检测}
+<! 
+my $tpl = 'zpjtk02.pdf';
+my @gifts = qw/READ COGNIZE REMEM MATH IQ SPACE BACKWARD CURIOUS FINANCE
+			LEAD WILL ADVENTURE STRAIN INDEPADENT FRIENDLY LUNG BONE
+			MUSCLE BURST FLEX MUSIC PANIT DANCE SPEECH HANDLE SHORTSIGHT WEIGHT DUODONG HEIGHT THOOTH/;
+my @gifts_zh = qw/阅读能力 认知能力 记忆力 数学天赋 智商天赋 空间想象力 逆向思维能力 好奇心 理财能力 团队协作力 
+              毅力 冒险意识 应变能力 激励依赖性 共情能力 肺活量 骨密度 肌肉力量 爆发力 身体柔韧性
+              音乐天赋 绘画天赋 舞蹈天赋 演讲天赋 动手能力 近视 肥胖 易多动 身高 牙齿发育/;
+!>
+\includepdf[page=1, pagecommand={\thispagestyle{empty}\infopagechild}]{<!= $tpl !>}
+\includepdf[page={2-5}]{<!= $tpl !>}
+\definecolor{zhili}{RGB}{74,105,188}
+\definecolor{siwei}{RGB}{109,167,45}
+\definecolor{xingge}{RGB}{247,185,63}
+\definecolor{yundong}{RGB}{238,56,73}
+\definecolor{yishu}{RGB}{162,67,168}
+\definecolor{chengzhang}{RGB}{93,200,173}
+! my $page = 6; my @colors = qw/zhili siwei xingge yundong yishu chengzhang/;
+! for(my $i=0; $i<@gifts; $i+=5){
+\vspace*{20mm}
+\includepdfpart{<!= $page !>}{58mm}{191mm}{<!= $tpl !>}
+!     if(int($i/5) ~~ any(0,1,2,4)){
+\begin{center}
+\rada[color=<!= $colors[int($i/5)] !>]{<!= join ',', @gifts_zh[$i .. $i+4] !>}{<!= join ',', map {$_->{risk}} @{$result}{@gifts[$i .. $i+4]} !>}
+\end{center}
+\includepdfpart{<!= $page++ !>}{210mm}{49mm}{<!= $tpl !>}
+!     }else{
+\begin{center}
+\rada[min=0.5, max=3.5, level=4, color=<!= $colors[int($i/5)] !>]{<!= join ',', @gifts_zh[$i .. $i+4] !>}{<!= join ',', map {int((length $_->{risk})/3)} @{$result}{@gifts[$i .. $i+4]} !>}
+\end{center}
+\includepdfpart{<!= $page++ !>}{202mm}{48mm}{<!= $tpl !>}
+!     }
+\newpage
+! }
+<!
+my $paper_height = 285;
+my $trims_above = 59; 
+my @trims_below = qw/143 -1 147 128 145 135 123 139 134 129 134 129 134 130 129 129 139 134 134 129 149 139 149 149 134 125 129 135 129 133/;
+!>
+\tikzset{genepic/.style={font={\sffamily\color{black!75}}}}
+! for(my $i=0; $i<@gifts; $i+=5){
+\includepdf[pages=<!= $page++ !>, pagecommand={}]{<!= $tpl !>}
+!     for(my $j=0; $j<5; $j++){
+!         if((my $trim = shift @trims_below) > 0){
+\vspace*{20mm minus 15mm }
+\includepdfpart{<!= $page++ !>}{<!= $trims_above !>mm}{<!= $paper_height - $trim !>mm}{<!= $tpl !>}
+\vspace*{15mm minus 5mm}
+\begin{center}
+\genepic{<!= $colors[int($i/5)] !>}{<!= join ',', map {join '/', @$_[0,1], $item->{$_->[1]}} @{$result->{$gifts[$i+$j]}{genes}} !>}
 
-\textit{me:} Hello, LaTeX!
 
-!= include 'JTK02/world';
-
-\includegraphics{test.png}
+\vspace*{5mm}
+{\sffamily\bfseries 
+! 				if(int($i/5) ~~ any(0,1,2,4)){
+<!= $gifts_zh[$i+$j] !>(\quad <!= $result->{$gifts[$i+$j]}{risk} !>分\quad) 
+! 				}else{
+<!= $gifts_zh[$i+$j] !>检测结果(\quad <!= $result->{$gifts[$i+$j]}{risk} !>\quad)
+!				 }
+}
+\end{center}
+!         }else{
+\includepdf[pages=<!= $page++ !>, pagecommand={}]{<!= $tpl !>}
+\vspace*{15mm minus 5mm}
+\begin{center}
+\genepic{<!= $colors[int($i/5)] !>}{<!= join ',', map {join '/', @$_[0,1], $item->{$_->[1]}} @{$result->{$gifts[$i+$j]}{genes}} !>}
+{\sffamily\bfseries 
+! 				if(int($i/5) ~~ any(0,1,2,4)){
+<!= $gifts_zh[$i+$j] !>(\quad <!= $result->{$gifts[$i+$j]}{risk} !>分\quad)
+!				 }else{
+<!= $gifts_zh[$i+$j] !>检测结果(\quad <!= $result->{$gifts[$i+$j]}{risk} !>\quad)
+!				 } 
+}
+\end{center}
+!             $page++;
+!         }
+\includepdf[pages=<!= $page++ !>, pagecommand={}]{<!= $tpl !>}
+!     }
+! }
+\includepdf[pages={79-96}, pagecommand={}]{<!= $tpl !>}
