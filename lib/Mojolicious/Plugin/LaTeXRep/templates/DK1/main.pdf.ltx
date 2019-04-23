@@ -1,0 +1,48 @@
+! layout 'zpgene';
+<! 
+my $tpl = "mrong6.pdf";
+my @class = qw/ 抗皱纹 锁水 白皙 抗斑 敏感肌肤 抗氧化/;
+
+my $paper_height = 285;
+my $trims_above = 62; 
+my @trims_below = qw/156 162 162 148 148 148/;
+
+sub level{
+	my $risk = shift;
+	return '弱' if $risk < 1.5;
+	return '强' if $risk > 2.5;
+	return '一般';
+}
+!>
+\pagecolor[RGB]{243,244,244}
+\input{mrong}
+\zphdr{基础皮肤管理基因检测}
+\includepdf[pages=1, pagecommand={\thispagestyle{empty}\infopageadult}]{<!= $tpl !>}
+\includepdf[pages={2-4}]{<!= $tpl !>}
+\setcounter{page}{1}
+\includepdf[pages={5-6},pagecommand={}]{<!= $tpl !>}
+\vspace*{20mm}
+\includepdfpart{7}{60mm}{207mm}{<!= $tpl !>}
+\vspace*{10mm}
+\begin{center}
+\definecolor{mclr}{RGB}{162,114,192}
+\rada[max=3.5,min=0.5,level=4,color=mclr]{<!= join ',', @class !>}{<!= join ',', map {$_->{risk}} @{$result}{@class} !>}
+\end{center}
+\vspace*{10mm}
+\includepdfpart{7}{210mm}{49mm}{<!= $tpl !>}
+
+! my $page = 8;
+! foreach my $mr (@class){
+\includepdf[pages=<!= $page++ !>, pagecommand={}]{<!= $tpl !>}
+\vspace*{20mm plus 10mm minus 10mm}
+\includepdfpart{<!= $page++ !>}{<!= $trims_above !>mm}{<!= $paper_height - shift @trims_below !>mm}{<!= $tpl !>}
+
+\vspace*{10mm}
+\begin{center}
+\mrong{<!= join ',', map {join '/', @{$_}[0,1,2]} @{$result->{$mr}{genes}} !>}
+\raisebox{16mm}[0pt]{\color{white}\Large\bfseries\sffamily <!= $mr eq '敏感肌肤' ? '肌肤敏感性' : $mr.'能力' !>：<!= level($result->{$mr}{risk}) !>}
+\end{center}
+\clearpage
+\includepdf[pages=<!= $page++ !>, pagecommand={}]{<!= $tpl !>}
+\includepdf[pages=<!= $page++ !>, pagecommand={}]{<!= $tpl !>}
+! }

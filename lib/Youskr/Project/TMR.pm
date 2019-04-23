@@ -27,7 +27,7 @@ sub _data{
 			my %rs_h;
 			@rs_h{qw/rsid gene ref alt freq/} = @{$rs}[0...4];
 			$rs_h{genotype} = $self->{$rs->[0]};
-			$rs_h{risk} = $rs->[&gene_type(@rs_h{qw/rsid gene genotype/})];
+			$rs_h{risk} = $rs->[&gene_type(@rs_h{qw/ref alt genotype/})];
 			push @{$tmr_h{rss}},\%rs_h;
 
 			$risk *= $rs_h{risk};
@@ -54,6 +54,7 @@ sub tumors {
 
 sub gene_type{
 	my ($ref, $alt, $genotype) = @_;
+#	warn "$ref, $alt, $genotype\n";
 	return $genotype eq $ref.$ref ? 7 : $genotype eq $alt.$alt ? 9 : 8;
 }
 

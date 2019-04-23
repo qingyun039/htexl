@@ -135,11 +135,12 @@
 
 \input{tools}
 \begin{document}
-! my $tpl = 'zpgag.pdf';
+\pagecolor[RGB]{243,244,244}
+! my $tpl = 'zpgagnew.pdf';
 <!
 my $paper_height = 285;
 my $trims_above = 60; 
-my $trims_below = [154, 154, 139, 144, 146, 135, 144, -1, 138, 131, 136, 
+my $trims_below = [154, 154, 139, 144, 146, 135, 144, -1, 139, 131, 136, 
 				   136, 146, 136, 136, 141, 136, 126, 132, 131, 136, 135];
 !>
 \includepdf[pages=1, pagecommand={\thispagestyle{empty}\infopage}]{<!= $tpl !>}

@@ -1,0 +1,170 @@
+! layout 'zpgene';
+! my $tpl = 'zpdk4.pdf';
+<!
+	sub excape_latex{
+		my $string = shift;
+		$string =~ s/%/\\%/g;
+		$string =~ s/~/\$\\sim\$/g;
+		return $string;
+	}
+
+	my @com_en = split "\n",q/IBUPROFEN
+ACETAMINOPHEN
+PHENOL MEMIN
+MONTELUKAST SODIUM CHEWABLE TABLETS
+PSEUDO HEMP SOLUTION
+BUDESONIDE
+SALBUTAMOL SULFATE
+DEXTROMETHORPHAN
+DEXTROMETHORPHAN HYDROBROMIDE ORAL SOLUTION
+TOPIRAMATE
+SODIUM VALPROATE
+DIAZEPAM
+PHENYTOIN SODIUM TABLETS
+FEXOFENADINE HYDROCHLORIDE
+FEXOFENADINE HYDROCHLORIDE
+RIBAVIRIN
+DAPSONE TABLETS
+SULFAMETHOXAZOLE
+PRAZIQUANTEL TABLETS
+ISONIAZID
+METRONIDAZOLE
+RIFAMPIN
+OMEPRAZOLE
+METOCLOPRAMIDE
+LANSOPRAZOLE
+GLIMEPIRIDE
+GLIPIZIDE
+TOLBUTAMIDE
+GLYBURIDE
+DRUG-INDUCED DEAFNESS
+/;
+
+!>
+\pagecolor[RGB]{243,244,244}\color{black!70}\raggedbottom
+\zphdr{儿童安全用药基因检测}
+\includepdf[pages=1]{<!= $tpl !>}
+\includepdf[pages=2, pagecommand={\thispagestyle{empty}\infopagechild}]{<!= $tpl !>}
+\includepdf[pages={3,4}]{<!= $tpl !>}
+\setcounter{page}{1}
+\includepdf[pages={5,6}, pagecommand={}]{<!= $tpl !>}
+
+\definecolor{Main}{RGB}{98,196,199}
+\definecolor{Sub}{RGB}{198,193,195}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}m{#1}}
+\newlength{\tlen}%
+\newlength{\mlen}%
+
+\newcommand{\dsec}[2]{
+	\vspace*{25mm plus 0mm minus 20mm}
+	\noindent
+	{\sffamily\huge\bfseries #1 \\[.5em]
+	 \bfseries\large\color{Sub}%
+	 \settowidth{\mlen}{#2}%
+	 \makebox[0pt][l]{\textcolor{Main}{\rule[-.1em]{\mlen}{.5em}}}#2}
+}
+\newenvironment{altDescription}{\begin{list}{}{%
+	\settowidth\labelwidth{\altDescriptionlabel{要四个字}}%
+	\setlength\leftmargin{\labelwidth+\labelsep}
+	\let\makelabel\altDescriptionlabel%
+}}{\end{list}}
+\newcommand*\altDescriptionlabel[1]{%
+	\hfil\bfseries\color{Main} #1：%
+}
+
+\dsec{儿童安全用药基因检测结果}{CHILD SAFETY MEDICATION GENE TEST}
+
+\vspace*{20mm minus 15mm}\noindent
+{
+\definecolor{tblhdr}{RGB}{129,212,239}
+\sffamily\small\color{black!80}
+\taburulecolor{Main}\taburowcolors 2{Main .. Main}\everyrow{\hline}\tabulinesep=2mm
+! my @class = qw/解热镇痛抗炎类 止咳平喘 镇静安神 抗过敏 抗病毒 抗感染 肠胃不适 儿童糖尿病 药物性耳聋/;
+! foreach my $class (@class){
+\begin{center}
+	\begin{tabu} to \textwidth {|X[5,c,m]|X[2,c,m]|X[2,c,m]|X[3,c,m]|}
+		\hline\rowfont{\color{white}\Large}
+		\multicolumn{4}{|c|}{<!= $class !>} \\ 
+		\taburowcolors 2{white .. white}
+	药物中文名 & 类型 & 药物指导 & 年龄禁忌 \\ 
+!     foreach my $drug (@{$result->{drugs}{$class}}){
+	    <!= $drug->[0] !> & <!= $drug->[3] !> & <!= $drug->[2] !> & <!= $drug->[1] !> \\ 
+!     }	
+	\end{tabu}
+	\par\vspace{20mm minus 10mm}
+!	  if($class eq '止咳平喘'){
+	\makebox[\textwidth][l]{\includegraphics[viewport=0mm 100mm 200mm 180mm,clip,width=\textwidth+30mm]{zpdk4a.png}}
+!     }
+!	  if($class eq '抗过敏'){
+	\makebox[\textwidth][r]{\includegraphics[viewport=100mm 100mm 300mm 180mm,clip,width=\textwidth+30mm]{zpdk4b.png}}
+!     }
+!	  if($class eq '抗感染'){
+	\makebox[\textwidth][c]{\includegraphics[viewport=0mm 20mm 150mm 100mm,clip,width=\textwidth]{zpdk4c.png}}
+!     }
+!	  if($class eq '药物性耳聋'){
+	\makebox[\textwidth][c]{\includegraphics[viewport=0mm 20mm 150mm 100mm,clip,width=\textwidth]{zpdk4d.png}}
+!     }
+\end{center}
+! }
+}
+\newpage\sffamily
+! my ($h,$v)=(1,1); my $page = 13; my $class = '';
+! foreach my $component (@{$result->{components}}){
+!     if($component->{class} ne $class){
+\includepdf[pages=<!= $page++ !>,pagecommand={}]{<!= $tpl !>}
+!          $class = $component->{class};
+!     }
+!     $page++;
+\dsec{<!= $component->{component} !>}{<!= shift @com_en !>}
+
+\vspace*{20mm minus 15mm}\noindent
+\begin{altDescription}
+	\item[商品名称] <!= join '，', @{$component->{drug}} !> 
+	\item[结果说明] <!= join '。', map {$_->[4] =~ s/。\s*$//; excape_latex($_->[4])} @{$component->{genes}} !> 
+	\item[主要成分] <!= excape_latex($component->{description}) !> 
+\end{altDescription}
+\vspace{10mm minus 8mm}
+\hspace*{5em}
+! my $genes = $component->{genes};
+! if(@$genes == 1){
+\begin{minipage}{6em}
+	\includegraphics[width=\textwidth]{zpdk4icon.eps}
+\end{minipage}
+\hspace{2em}
+\begin{minipage}{12em}
+	\makebox[4em][s]{基因名}: <!= $genes->[0][0] !>\\[5pt]
+	\makebox[4em][s]{基因位点}: <!= $genes->[0][1] !>\\[5pt]
+	\makebox[4em][s]{基因型}: <!= $genes->[0][2] !>
+\end{minipage}
+\hspace{4em}
+{\textcolor{Main}{用药建议}：\Large <!= $genes->[0][3] !>}
+
+\vspace*{20mm minus 10mm}
+\includegraphics[natheight=50mm,natwidth=\textwidth,clip]{<!= 'zpdk4one'.($h++ % 6).'.png' !>}
+! }else{
+\begin{minipage}[t]{20em}
+!     foreach my $gene (@$genes){
+    \begin{flushleft}
+	    \rule{0pt}{1em}\\[-1em]
+		\begin{minipage}{6em}
+			\includegraphics[width=\textwidth]{zpdk4icon.eps}
+		\end{minipage}
+		\hspace*{1em}
+		\begin{minipage}{12em}
+			\makebox[4em][s]{基因名}: <!= $gene->[0] !>\\[5pt]
+			\makebox[4em][s]{基因位点}: <!= $gene->[1] !>\\[5pt]
+			\makebox[4em][s]{基因型}: <!= $gene->[2] !>
+		\end{minipage}\\[1em]
+		{\textcolor{Main}{用药建议}：\Large <!= $genes->[0][3] !>}
+	\end{flushleft}
+	\vspace*{1em}
+!     }
+\end{minipage}
+\hfil
+\begin{minipage}[t]{60mm}
+	\rule{0pt}{1em}\\[-1em]\includegraphics[natwidth=60mm, natheight=90mm,clip]{<!= 'zpdk4two'. ($v++) .'.png' !>}
+\end{minipage}
+! }
+\newpage
+! }
+\includepdf[pages={52-57},pagecommand={}]{<!= $tpl !>}

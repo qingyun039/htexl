@@ -65,9 +65,61 @@
 }
 
 
+\definecolor{high}{RGB}{252,65,78}
+\definecolor{low}{RGB}{130,203,81}
+\definecolor{avg}{RGB}{244,195,68}
+\newcommand{\tmrbar}[1]{
+	\def\list{#1}
+	\begin{tikzpicture}[scale=.8,font=\bfseries\sffamily\color{black!60}, minimum height=20pt]
+	\draw[line width=1.5pt,black!60, line cap=rect] (0,0) -- (13,0);
+	\foreach[count=\i] \x in {0.2,0.4,0.6,0.8,1.0,1.2,1.4,1.6,$\infty$}{
+		\node[below] at (\i*1.44,0) {\x};
+	}
+	\node[below] (0,0) {0};
+	\foreach[count=\i] \c/\r  in \list{
+		\gdef\maxitem{\i}
+		\coordinate (a\i) at (0, .8*\i);
+	}
+	\gdef\barclr{avg}
+	\foreach[count=\i] \c/\r  in \list{
+		\let\s=\r
+		\ifthenelse{\lengthtest{\r pt<0.8pt}}{\gdef\barclr{low}}{
+		\ifthenelse{\lengthtest{\r pt>1.2pt}}{\gdef\barclr{high}}{\gdef\barclr{avg}}}
+		\ifthenelse{\lengthtest{\r pt>1.71pt}}{\def\r{1.71}}{}
+		\node[anchor=east] at (a\i) {\c};
+		\draw[line width=4pt,\barclr] (a\i){[line cap=round] -- ++(7.2*\r, 0)} node[anchor=west] {\s};
+	}
+	\draw[line width=1.5pt, black!60] (0,0) -- (a\maxitem) -- ++(0, .7);
+	\end{tikzpicture}
+}
+\newcommand{\tmrpoint}[1]{
+	\def\list{#1}
+	\begin{tikzpicture}[font=\bfseries\sffamily\color{black!60}, minimum height=20pt]
+	\foreach[count=\i] \x in {0.2,0.4,0.6,0.8,1.0,1.2,1.4,1.6,$\infty$}{
+		\draw[black!60,thick, dash pattern=on 2pt off 6pt] (0,\i*0.8)  node[anchor=east] {\x} -- (\textwidth,\i*0.8);
+	}
+	\draw[black!60, line width=1.5pt] (0,0)  node[anchor=east] {0} -- (\textwidth,0);
+	\foreach[count=\i] \c/\r  in \list{\gdef\maxitem{\i}}
+	\dimendef\jian=0
+	\pgfmathsetlength{\jian}{\textwidth/(\maxitem+1)}
+	\foreach[count=\i] \c/\r  in \list{
+		\let\s=\r
+		\ifthenelse{\lengthtest{\r pt<0.8pt}}{\gdef\barclr{low}}{
+			\ifthenelse{\lengthtest{\r pt>1.2pt}}{\gdef\barclr{high}}{\gdef\barclr{avg}}}
+		\ifthenelse{\lengthtest{\r pt>1.71pt}}{\def\r{1.71}}{}
+		\node[below] at (\jian*\i, 0) {\c};
+		\node[above,\barclr] at (\jian*\i, \r*4) {\r};
+		\fill[\barclr] (\jian*\i, \r*4) circle (3pt);
+		\draw[\barclr] (\jian*\i, \r*4) circle (4pt);
+		
+	}
+	\end{tikzpicture}
+}
+
 != include 'layouts/userinfo';
 \input{tools}
 \begin{document}
+\pagecolor[RGB]{243,244,244}
 ! my $tpl = 'zptmrmale';
 ! $tpl = 'zptmrfemale' if $item->{'性别'} eq '女';
 <!
@@ -84,7 +136,7 @@ my $trims_below = 150;
 
 \vspace{5mm}\centering
 \definecolor{myclr}{RGB}{33,50,124}
-\rada[min=0.5, max=3.5, level=7, color=myclr]{<!= join ',', map {$_->{tumor}} @$result !>}{<!= join ',', map {$_->{risk}} @$result !>}
+\tmrbar{<!= join ',', map { $_->{tumor}.'/'.$_->{risk} } @$result !>}
 
 \includepdfpart{6}{213mm}{47mm}{<!= $tpl !>}
 \newpage
